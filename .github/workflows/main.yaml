@@ -1,0 +1,20 @@
+name: Deploy to S3 Bucket
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    uses: truid-co-za/shared-workflows/.github/workflows/deploy-react-application-to-S3.yaml@main
+    secrets:
+      AWS_DEV_ROLE_TO_ASSUME: ${{ secrets.AWS_DEV_ROLE_TO_ASSUME }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
