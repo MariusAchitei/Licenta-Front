@@ -56,7 +56,7 @@ function Map() {
             lng: coords.longitude,
           });
         },
-        () => alert("Unable to retrieve your location")
+        () => alert("Unable to retrieve your location"),
       );
     }
   }, []);

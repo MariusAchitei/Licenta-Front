@@ -4,8 +4,9 @@ import { MdLogin } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../utils/UserContext";
 import { useContext } from "react";
-import logo from "assets/images/logo.png"
+import logo from "assets/images/logo.png";
 import { applicationName } from "utils/vars";
+import Logo from "ui/Logo";
 
 export function NavbarComponent() {
   const { user } = useContext(UserContext);
@@ -13,14 +14,15 @@ export function NavbarComponent() {
   return (
     <Navbar fluid rounded>
       <Navbar.Brand>
-        <img
+        {/* <img
           src={logo}
           className="mr-3 h-6 sm:h-9"
           alt="Flowbite React Logo"
         />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           {applicationName}
-        </span>
+        </span> */}
+        <Logo />
       </Navbar.Brand>
       <div className="flex md:order-2">
         <DarkThemeToggle />

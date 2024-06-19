@@ -1,18 +1,14 @@
 "use client";
 
 import { Footer } from "flowbite-react";
+import Logo from "ui/Logo";
 
 export function FooterComponent() {
   return (
     <Footer container>
       <div className="w-full text-center">
         <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
-          <Footer.Brand
-            href="https://www.truid.co.za/"
-            src="../truid-logo.jpg"
-            alt="TruId Logo"
-            name="TruID"
-          />
+          <Logo />
           <Footer.LinkGroup>
             <Footer.Link href="#">About</Footer.Link>
             <Footer.Link href="#">Privacy Policy</Footer.Link>
@@ -21,7 +17,7 @@ export function FooterComponent() {
           </Footer.LinkGroup>
         </div>
         <Footer.Divider />
-        <Footer.Copyright href="#" by="TruId™" year={2024} />
+        <Footer.Copyright href="#" by="Clinic-Care™" year={2024} />
       </div>
     </Footer>
   );

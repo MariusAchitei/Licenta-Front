@@ -4,6 +4,14 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+// if(window.location.pathname.includes("medics")){
+//   require("./client/assets/icons/fontawesome/css/fontawesome.min.css");
+//   require("./client/assets/icons/fontawesome/css/all.min.css");
+//   require("./client/assets/icons/feather/css/iconfont.css");
+//   require("./client/assets/scss/main.scss");
+//   require("../src/client/components/customstyleclient.css");
+// }
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );

@@ -11,11 +11,11 @@ import { FooterComponent } from "./components/common/Footer";
 import Home from "pages/Home";
 import AppointmentForm from "pages/appointment/CreateAppointment";
 
-import GlobalStyles from "utils/global";
-import "react-grid-layout/css/styles.css";
-import "./fonts/icomoon/style.css";
-import "swiper/css";
-import "swiper/css/effect-fade";
+// import GlobalStyles from "utils/global";
+// import "react-grid-layout/css/styles.css";
+// import "./fonts/icomoon/style.css";
+// import "swiper/css";
+// import "swiper/css/effect-fade";
 import { SnackbarProvider } from "notistack";
 
 import { ThemeProvider, StyleSheetManager } from "styled-components";
@@ -24,12 +24,27 @@ import {
   ThemeProvider as MuiThemeProvider,
   createTheme,
 } from "@mui/material/styles";
-import Sidebar from "layout/Sidebar";
-import { SidebarContextAPI } from "contexts/sidebarContext";
-import { InterfaceContextAPI } from "contexts/interfaceContext";
+// import SearchDoctor2 from "pages/medics/MedicSearch";
+import MedicSearch from "pages/medics/MedicSearch2";
+import MedicDetail from "pages/medics/MedicDetail/index";
+import ClinicsPage from "pages/clinics/ClinicList";
+import MedicSearch3 from "pages/medics/MedicSearch3";
+import MedicDetail2 from "pages/medics/MedicDetail2";
+import Clinics2 from "pages/clinics/ClinicList2";
+import ClinicDetail from "pages/clinics/ClinicDetail/index";
+import Profile from "pages/User/Profile";
 
 const AppRoutes = () => {
   const routes = useRoutes([
+    { path: "/profile", element: <Profile /> },
+    { path: "/clinics/id", element: <ClinicDetail /> },
+    { path: "/clinics2", element: <Clinics2 /> },
+    { path: "/medics/search3", element: <MedicSearch3 /> },
+    { path: "/clinics", element: <ClinicsPage /> },
+    { path: "/medics", element: <MedicDetail /> },
+    { path: "/medics2", element: <MedicDetail2 /> },
+    { path: "/medics/search", element: <MedicSearch /> },
+    // { path: "/medics/search", element: <SearchDoctor2 /> },
     { path: "/appointments/create", element: <AppointmentForm /> },
     { path: "/home", element: <Home /> },
     { path: "/login", element: <Login /> },
@@ -78,7 +93,7 @@ function App() {
           >
             <BrowserRouter>
               <UserProvider>
-                <GlobalStyles />
+                {/* <GlobalStyles /> */}
                 {/* <Sidebar /> */}
                 <NavbarComponent />
                 <section className="relative min-h-screen  bg-transparent lg:pb-[90px] lg:pt-[120px]">
