@@ -1,119 +1,101 @@
-import React from "react";
-
-import { StyledForm, Container } from "widgets/UserSettings/style";
-
-import LabeledFormInput from "ui/LabeledFormInput";
-import CustomSelect from "ui/Select";
-
+import React, { useState } from "react";
+import { Select, Card } from "flowbite-react";
 import romanianCounties from "db/counties";
 import romanianClinics from "db/clinics";
 import romanianMedics from "db/romanianMedics";
 
-// hooks
-import { useState } from "react";
-import useNotistack from "hooks/useNotistack";
-
-const Step2 = ({ type }) => {
-  const { notify } = useNotistack(
-    "Your changes have been successfully saved.",
-    "success",
-  );
-
-  const [selectedCounty, setSelectedCounty] = useState();
-  const [selectedClinic, setSelectedClinic] = useState();
+const Step2 = () => {
+  const [selectedCounty, setSelectedCounty] = useState("");
+  const [selectedClinic, setSelectedClinic] = useState("");
   const [clinicOptions, setClinicOptions] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [selectedMedic, setSelectedMedic] = useState();
+  const [selectedMedic, setSelectedMedic] = useState("");
   const [medicOptions, setMedicOptions] = useState([]);
 
-  const handleCountyChange = (county) => {
-    setSelectedCounty(county);
-    setSelectedClinic(null);
-    setSelectedMedic(null);
-    console.log(
-      romanianClinics.filter((c) => c.countyId === county.id)[0].clinics,
+  const handleCountyChange = (event) => {
+    console.log(event.target.value);
+    console.log(romanianCounties);
+    console.log(romanianClinics);
+    const countyId = event.target.value;
+    setSelectedCounty(countyId);
+    setSelectedClinic("");
+    setSelectedMedic("");
+    const selectedCounty = romanianCounties.find(
+      (county) => county.id === countyId,
     );
     setClinicOptions(
-      romanianClinics.filter((c) => c.countyId === county.id)[0].clinics,
+      romanianClinics.filter(
+        (clinic) => clinic.countyId == event.target.value,
+      )[0].clinics,
     );
   };
-  const handleClinicChange = (clinic) => {
-    setSelectedClinic(clinic);
-    const medics = [];
-    for (let i = 0; i < 5; i++) {
-      const randomIndex = Math.floor(Math.random() * romanianMedics.length);
-      medics.push(romanianMedics[randomIndex]);
-    }
+
+  const handleClinicChange = (event) => {
+    const clinicId = event.target.value;
+    setSelectedClinic(clinicId);
+    setSelectedMedic("");
+    const medics = romanianMedics.filter(
+      (medic) => medic.clinicId === clinicId,
+    );
     setMedicOptions(medics);
-    setSelectedMedic(null);
   };
-  const handleMedicChange = (medic) => {
-    setSelectedMedic(medic);
+
+  const handleMedicChange = (event) => {
+    setSelectedMedic(event.target.value);
   };
+
   return (
-    <StyledForm
-      action="#"
-      method="post"
-      id={`settings_${type}`}
-      onSubmit={(e) => e.preventDefault()}
-    >
-      <div className="wrapper flex flex-col lg:flex-row">
-        <div className="flex flex-1 flex-col justify-center align-middle">
-          <p>Step 2</p>
-          <p className="text-3xl">
-            Where and when do you want your appointment?
-          </p>
+    <div>
+      <Card>
+        <div className="mb-4">
+          <Select
+            onChange={handleCountyChange}
+            value={selectedCounty}
+            className="w-full"
+          >
+            <option value="" disabled>
+              Select County
+            </option>
+            {romanianCounties.map((county) => (
+              <option key={county.id} value={county.id}>
+                {county.label}
+              </option>
+            ))}
+          </Select>
         </div>
-        <div className="flex flex-1 flex-col">
-          <LabeledFormInput
-            id={`${type}CountyName`}
-            title="County"
-            placeholder="County"
-            customInput={
-              <CustomSelect
-                label={`${type}County`}
-                placeholder="County"
-                options={romanianCounties}
-                value={selectedCounty}
-                variant="basic"
-                changeHandler={(e) => handleCountyChange(e)}
-              />
-            }
-          />
-          <LabeledFormInput
-            id={`${type}ClinicName`}
-            title="Clinic"
-            placeholder="Clinic"
-            customInput={
-              <CustomSelect
-                label={`${type}Clinic`}
-                placeholder="Clinic"
-                options={clinicOptions}
-                value={selectedClinic}
-                variant="basic"
-                changeHandler={(e) => handleClinicChange(e)}
-              />
-            }
-          />
-          <LabeledFormInput
-            id={`${type}MedicName`}
-            title="Medic"
-            placeholder="Medic"
-            customInput={
-              <CustomSelect
-                label={`${type}Medic`}
-                placeholder="Medic"
-                options={medicOptions}
-                value={selectedMedic}
-                variant="basic"
-                changeHandler={(e) => handleMedicChange(e)}
-              />
-            }
-          />
+        <div className="mb-4">
+          <Select
+            onChange={handleClinicChange}
+            value={selectedClinic}
+            className="w-full"
+          >
+            <option value="" disabled>
+              Select Clinic
+            </option>
+            {clinicOptions.map((clinic) => (
+              <option key={clinic.id} value={clinic.id}>
+                {clinic.label}
+              </option>
+            ))}
+          </Select>
         </div>
-      </div>
-      {/* <Btn text="Save" handler={notify} type="submit" /> */}
-    </StyledForm>
+        <div className="mb-4">
+          <Select
+            onChange={handleMedicChange}
+            value={selectedMedic}
+            className="w-full"
+          >
+            <option value="" disabled>
+              Select Medic
+            </option>
+            {medicOptions.map((medic) => (
+              <option key={medic.id} value={medic.id}>
+                {medic.label}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </Card>
+    </div>
   );
 };
 

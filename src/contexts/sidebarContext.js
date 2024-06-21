@@ -1,26 +1,27 @@
-import {createContext, useState, useContext} from 'react';
+import React, { useState, useMemo } from 'react'
 
-export const SidebarContext = createContext(undefined);
+// create context
+export const SidebarContext = React.createContext()
 
-export const SidebarContextAPI = ({children}) => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+export const SidebarProvider = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    };
+  function toggleSidebar() {
+    setIsSidebarOpen(!isSidebarOpen)
+  }
 
-    window.addEventListener('resize', () => {
-        if (window.innerWidth < 1366) {
-            setIsSidebarOpen(false);
-        }
-    });
+  function closeSidebar() {
+    setIsSidebarOpen(false)
+  }
 
-    return (
-        <SidebarContext.Provider value={{isSidebarOpen, toggleSidebar}}>
-        {children}
-        </SidebarContext.Provider>
-    );
+  const value = useMemo(
+    () => ({
+      isSidebarOpen,
+      toggleSidebar,
+      closeSidebar,
+    }),
+    [isSidebarOpen]
+  )
+
+  return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>
 }
-
-export const useSidebarContext = () => useContext(SidebarContext);
-

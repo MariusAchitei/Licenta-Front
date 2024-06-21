@@ -1,4 +1,6 @@
 import React from "react";
+import { Button } from "@windmill/react-ui";
+import { FaMapLocationDot } from "react-icons/fa6";
 
 export default function ClinicCard({ clinic }) {
   return (
@@ -46,16 +48,10 @@ export default function ClinicCard({ clinic }) {
           </div>
         </div>
         <div className="mt-4 flex flex-col space-y-2 text-right md:ml-6 md:mt-0">
-          <button className="mb-2 me-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            View Clinic
-          </button>
-          <button className="mb-2 me-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            Make an Appointment
-          </button>
+          <Button>View Clinic</Button>
+          <Button layout="outline">Make an Appointment</Button>
           <a href={clinic.mapLink}>
-            <button className="mb-2 me-2 w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-              Map
-            </button>
+            <FaMapLocationDot className="m-auto size-14 rounded-full bg-gray-100 p-1 text-purple-500" />
           </a>
         </div>
       </div>

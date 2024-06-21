@@ -1,71 +1,31 @@
-// styling
-import styled from 'styled-components';
-import {colors, flex} from 'utils/styles';
+import React from "react";
+import { Card } from "flowbite-react";
+import Lottie from "react-lottie";
+import * as animationData from "./no-data-animation.json"; // Replace with your own animation file
 
-// assets
-import search_light from 'assets/search_light.json';
-import search_dark from 'assets/search_dark.json';
-import cards from 'assets/cards.json';
+const NoDataPlaceholder = () => {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
-// components
-import {AnimatePresence, motion} from 'framer-motion';
-import Lottie from 'lottie-react';
-
-// utils
-import PropTypes from 'prop-types';
-import {fadePresence} from 'constants/framer';
-
-// hooks
-import {useTheme} from 'styled-components';
-
-const Wrapper = styled(motion.div)`
-  ${flex.col};
-  ${flex.center};
-  padding: 24px;
-  gap: 48px;
-  height: 100%;
-  flex-grow: 1;
-  ${props => props.variant === 'cards' && `margin-top: -40px;`}
-
-  .search, .cards {
-    max-height: 300px;
-    display: flex;
-    width: fit-content;
-  }
-  
-  .cards {
-    margin-top: -24px;
-  }
-  
-  p {
-    margin-top: -100px;
-    color: ${colors.gray};
-  }
-`;
-
-const NoDataPlaceholder = ({variant = 'search'}) => {
-    // const {theme} = useTheme();
-    const theme = 'light';
-    return (
-        <AnimatePresence>
-            <Wrapper {...fadePresence} initial={{opacity: 0}} variant={variant}>
-                {
-                    variant === 'search' ? (
-                        <Lottie className={variant}
-                                animationData={theme === 'light' ? search_light : search_dark}
-                                loop={false}
-                                style={{width: 300}}
-                        />
-                    ) : <Lottie className={variant} animationData={cards} loop={false}/>
-                }
-                {variant === 'cards' && <p>You did not archive any cards yet</p>}
-            </Wrapper>
-        </AnimatePresence>
-    )
-}
-
-NoDataPlaceholder.propTypes = {
-    variant: PropTypes.oneOf(['cards', 'search'])
-}
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <Card className="flex flex-col items-center p-10">
+        <Lottie options={defaultOptions} height={200} width={200} />
+        <h2 className="mt-4 text-2xl font-bold text-gray-700">
+          No Data Available
+        </h2>
+        <p className="mt-2 text-gray-500">
+          It looks like there's no data to display here.
+        </p>
+      </Card>
+    </div>
+  );
+};
 
 export default NoDataPlaceholder;

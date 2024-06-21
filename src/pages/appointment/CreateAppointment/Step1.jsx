@@ -1,112 +1,66 @@
-// styling
-import styled from "styled-components";
-import { flex, breakpoints } from "utils/styles";
-
-// styled components
-import { Header } from "components/custom/Widget/style";
-
-// components
-import Widget from "components/custom/Widget";
-import WidgetBody from "components/custom/Widget/WidgetBody";
-import WidgetHeader from "components/custom/Widget/WidgetHeader";
-import CustomSelect from "ui/Select";
-import SearchBar from "ui/SearchBar";
-import NoDataPlaceholder from "components/custom/NoDataPlaceholder";
-import ServiceCard from "components/custom/ServiceCard";
-
-import { useState } from "react";
-
+import React, { useState } from "react";
+import { Select, TextInput, Card } from "flowbite-react";
 import medicalDepartments from "db/medicalDepartments";
+import ServiceCard from "components/custom/ServiceCard";
+import NoDataPlaceholder from "components/custom/NoDataPlaceholder";
 
-export const ListHeader = styled(Header)`
-  padding: 24px 0 20px;
-
-  .wrapper {
-    padding: 0 24px;
-    ${flex.col};
-    gap: 20px;
-  }
-
-  .wrapper,
-  form {
-    flex-grow: 1;
-    width: 100%;
-  }
-
-  ${breakpoints.tablet} {
-    .wrapper {
-      flex-direction: row;
-      ${flex.between};
-
-      .gender {
-        width: 300px;
-      }
-    }
-  }
-`;
-
-const Step1 = ({ variant, onSelect = () => {} }) => {
-  const [departmentsOptions, setDepartmentsOptions] =
-    useState(medicalDepartments);
+const Step1 = () => {
   const [department, setDepartment] = useState(medicalDepartments[0]);
   const [search, setSearch] = useState("");
-  const [services, setServices] = useState([]);
-  const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [services, setServices] = useState(department.services);
 
-  const handleDepartmentChange = (department) => {
-    console.log(department);
-    setDepartment(department);
-    setServices(department.services);
+  const handleDepartmentChange = (e) => {
+    const selectedDepartment = medicalDepartments.find(
+      (dep) => dep.id === e.target.value,
+    );
+    setDepartment(selectedDepartment);
+    setServices(selectedDepartment.services);
   };
 
   const handleSearchChange = (e) => {
-    setSearch(e);
-    console.log(e);
-    if (services == "") {
-      return;
-    }
-    const filteredServices = services.filter(
+    setSearch(e.target.value);
+    const filteredServices = department.services.filter(
       (service) =>
-        service.label.toLowerCase().includes(e.toLowerCase()) ||
-        service.description.toLowerCase().includes(e.toLowerCase()),
+        service.label.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        service.description
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase()),
     );
     setServices(filteredServices);
   };
 
   return (
-    <Widget name="DoctorsList">
-      <ListHeader>
-        <div className="wrapper">
-          <CustomSelect
-            placeholder={"Select a department"}
-            options={departmentsOptions}
-            variant="minimal"
-            value={department}
-            changeHandler={(e) => handleDepartmentChange(e)}
-          />
-          {/* <GenderNav state={gender} handler={setGender} /> */}
+    <div>
+      <Card>
+        <div className="mb-4">
+          <Select
+            onChange={handleDepartmentChange}
+            value={department.id}
+            className="w-full"
+          >
+            {medicalDepartments.map((dep) => (
+              <option key={dep.id} value={dep.id}>
+                {dep.label}
+              </option>
+            ))}
+          </Select>
         </div>
-        <SearchBar
+        <TextInput
           placeholder="Search a medical service"
-          handler={(e) => handleSearchChange(e)}
           value={search}
+          onChange={handleSearchChange}
         />
-      </ListHeader>
-      <WidgetBody style={{ padding: 0 }}>
-        {services.length !== 0 ? (
+      </Card>
+      <div className="mt-4">
+        {services.length ? (
           services.map((service) => (
-            <ServiceCard
-              key={service.id}
-              service={service}
-              isSelected={selectedServiceId === service.id}
-              onSelect={() => setSelectedServiceId(service.id)}
-            />
+            <ServiceCard key={service.id} service={service} />
           ))
         ) : (
           <NoDataPlaceholder />
         )}
-      </WidgetBody>
-    </Widget>
+      </div>
+    </div>
   );
 };
 

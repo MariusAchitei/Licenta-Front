@@ -3,7 +3,7 @@ import Container from "components/custom/Container";
 
 const Section = ({ id, title, children }) => {
   return (
-    <Container>
+    <Container id={id}>
       <h2 className="mb-4 text-2xl font-bold">{title}</h2>
       <hr />
       <div className="mt-4">{children}</div>

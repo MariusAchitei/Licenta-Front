@@ -1,11 +1,11 @@
-import styled from 'styled-components';
-import {colors, textSizes, flex, fonts, breakpoints} from 'utils/styles';
+import styled from "styled-components";
+import { colors, textSizes, flex, fonts, breakpoints } from "utils/styles";
 
 export const Card = styled.div`
-  background-color: ${props => colors[props.className]};
+  background-color: ${(props) => colors[props.className]};
   border-radius: 8px;
   color: #fff;
-  font-size: ${textSizes['40']};
+  font-size: ${textSizes["40"]};
   height: 80px;
   ${flex.col};
   ${flex.center};
@@ -17,7 +17,7 @@ export const Info = styled.div`
 
   .value {
     font-family: ${fonts.accent};
-    font-size: ${textSizes['40']};
+    font-size: ${textSizes["40"]};
     font-weight: 300;
     flex-grow: 1;
   }
@@ -46,4 +46,3 @@ export const Content = styled.div`
     }
   }
 `;
-

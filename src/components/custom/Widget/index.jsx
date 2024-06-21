@@ -21,7 +21,7 @@ const Widget = ({ name, children, style, shadow = false, ...props }) => {
       transition={{ duration: 0.4 }}
       viewport={{ once: true }}
       style={style}
-      className={shadow ? "shadow" : ""}
+      className="shadow-2xl"
       //    dir={direction}
       mobile={props.mobile}
     >

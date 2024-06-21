@@ -1,4 +1,3 @@
-import React from "react";
 import Sidebar from "./Sidebar";
 import AccountInfo from "./AccountInfo";
 import Authentication from "./Authentication";
@@ -7,9 +6,6 @@ import PersonalInfo from "./PersonalInfo";
 import AccountConfirmation from "./AccountConfirmation";
 import DeleteAccount from "./DeleteAccount";
 import Section from "./Section";
-import { data } from "db/cure";
-// Replace this with the correct import path or remove if it's not needed
-// import { data } from "db/cure";
 
 const UserProfile = () => {
   const mockData = {
@@ -87,13 +83,13 @@ const UserProfile = () => {
   ];
 
   return (
-    <div className="m-auto flex min-h-screen flex-col bg-gray-50 px-5 lg:max-w-[70vw] lg:flex-row">
+    <div className="m-auto flex min-h-screen flex-col bg-gray-50 px-5 lg:max-w-[90vw] lg:flex-row">
       <Sidebar sections={sections} />
       <div className="flex-1 p-6">
         <h1 className="mb-6 text-3xl font-bold">My Profile</h1>
         {sections.map(
           ({ id, title, component: Component, data = { test: 25 } }) => (
-            <Section key={id} title={title}>
+            <Section id={id} key={id} title={title}>
               {Component({ data })}
             </Section>
           ),

@@ -1,5 +1,5 @@
 import React from "react";
-import RatingBars from "../../../../pages/medics/MedicDetail2/RatingBars";
+import RatingBars from "../../../../pages/medics/MedicDetail/RatingBars";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 
 export default function Reviews({ data }) {
