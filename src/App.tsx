@@ -11,6 +11,7 @@ import {
 import Layout from "containers/Layout";
 
 import routes from "routes";
+import { ChatBotComponent as ChatBot } from "components/ChatBot";
 
 // const Layout = lazy(() => import("containers/Layout"));
 const Login = lazy(() => import("pages/Login"));
@@ -44,6 +45,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
+      <ChatBot />
     </>
   );
 }

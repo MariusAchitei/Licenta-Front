@@ -43,7 +43,7 @@ function Header() {
           onClick={toggleSidebar}
           aria-label="Menu"
         >
-          <MenuIcon className="h-6 w-6" aria-hidden="true" />
+          <MenuIcon className="size-6" aria-hidden="true" />
         </button>
         {/* <!-- Search input --> */}
         <div className="flex flex-1 justify-center lg:mr-32">
