@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import ChatbotButton from "./ChatbotButton";
 import ChatWindow from "./ChatWindow";
 
@@ -7,19 +8,33 @@ const ChatBotComponent = () => {
   const [messages, setMessages] = useState([
     { isAi: true, message: "Hi, how can I help you today?" },
   ]);
+  const [isTyping, setIsTyping] = useState(false);
 
   const handleSendMessage = (message) => {
     setMessages([...messages, { isAi: false, message }]);
-    // Simulate AI response for demonstration purposes
-    setMessages((prev) => [
-      ...prev,
-      //   { isAi: false, message },
-      {
-        isAi: true,
-        message:
-          "Sorry, I couldn't find any information in the documentation about that.",
-      },
-    ]);
+    fetchBotResponse(message);
+  };
+
+  const fetchBotResponse = async (message) => {
+    setIsTyping(true);
+    try {
+      const response = await axios.post("YOUR_API_ENDPOINT", { message });
+      setMessages((prev) => [
+        ...prev,
+        { isAi: true, message: response.data.reply },
+      ]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          isAi: true,
+          message: "Something went wrong, please try again.",
+          isError: true,
+        },
+      ]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   const handleButtonClick = () => {
@@ -38,6 +53,7 @@ const ChatBotComponent = () => {
         messages={messages}
         onSendMessage={handleSendMessage}
         onClose={handleClose}
+        isTyping={isTyping}
       />
     </div>
   );

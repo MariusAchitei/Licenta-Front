@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import RatingBars from "../../../../pages/medics/MedicDetail/RatingBars";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
+import AddReview from "./AddReview";
 
-export default function Reviews({ data }) {
+export default function Reviews({ data, checkPermission }) {
   const { reviews, rating } = data;
+  const [showAddReview, setShowAddReview] = useState(false);
+
+  const handleAddReview = (review) => {
+    // Logic to add the review to the reviews list
+    data.reviews.push({
+      name: "New User", // This should be replaced with actual user data
+      date: new Date().toLocaleString(),
+      comment: review.comment,
+      rating: review.rating,
+      verifiedPurchase: true, // This should be dynamically determined
+      helpful: { yes: 0, no: 0 },
+    });
+    setShowAddReview(false);
+  };
 
   return (
     <div className="rounded-lg bg-white p-6 shadow-md">
@@ -20,7 +35,10 @@ export default function Reviews({ data }) {
             ))}
           </span>
           <span className="ml-2 text-gray-600">({reviews.length} ratings)</span>
-          <button className="mt-4 rounded-lg bg-yellow-300 px-4 py-2 text-white">
+          <button
+            className="mt-4 rounded-lg bg-yellow-300 px-4 py-2 text-white"
+            onClick={() => setShowAddReview(!showAddReview)}
+          >
             Add your feedback
           </button>
         </div>
@@ -49,6 +67,12 @@ export default function Reviews({ data }) {
           </select>
         </div>
       </div>
+      {showAddReview && (
+        <AddReview
+          onSubmit={handleAddReview}
+          checkPermission={checkPermission}
+        />
+      )}
 
       {reviews.map((review, index) => reviewComponent(index, review))}
     </div>

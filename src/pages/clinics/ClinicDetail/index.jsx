@@ -1,29 +1,43 @@
 import React from "react";
 import ClinicInfo from "./ClinicInfo";
 import DetailLayout from "components/custom/DetailLayout";
-
 import ClinicOverview from "./ClinicOverview";
 import ClinicGallery from "./ClinicGallery";
-import Map from "components/custom/Map";
 import Reviews from "components/custom/DetailLayout/Reviews";
+import ClinicMap from "./ClinicMap";
 
 const clinic = {
   name: "Clinica Sala Palatului",
   address: "Str. Ion Campineanu nr. 23, Sector 1, BUCURESTI",
   hours: "Luni - Vineri 09:00 - 19:00",
-  image: "https://via.placeholder.com/300",
+  image:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTykS2ypRll9Cg0OcC605mMt8JSGv7dJaSGWQ&s",
   description:
-    "Clinica Sala Palatului is a medical facility offering a range of services...",
-  specialties: ["Ginecologie", "Cardiologie", "Pediatrie", "Dermatologie"],
+    "Clinica Sala Palatului este o unitate medicală de renume situată în inima Bucureștiului, oferind o gamă largă de servicii medicale de înaltă calitate. Echipa noastră de medici specializați și personalul dedicat se asigură că fiecare pacient primește cea mai bună îngrijire posibilă.",
+  specialties: [
+    "Ginecologie",
+    "Cardiologie",
+    "Pediatrie",
+    "Dermatologie",
+    "Ortopedie",
+    "Neurologie",
+  ],
   gallery: [
-    "https://via.placeholder.com/150",
-    "https://via.placeholder.com/150",
-    "https://via.placeholder.com/150",
+    "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xpbmljfGVufDB8fDB8fHww",
+    "https://images.unsplash.com/photo-1631248055158-edec7a3c072b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2xpbmljfGVufDB8fDB8fHww",
+    "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2xpbmljfGVufDB8fDB8fHww",
+    "https://images.unsplash.com/photo-1551076805-e1869033e561?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2xpbmljfGVufDB8fDB8fHww",
   ],
   coordinates: { lat: 44.437926, lng: 26.096306 },
   mapLink: "https://maps.google.com/?q=Clinica+Sala+Palatului",
   rating: {
     score: 4.97,
+    count: 182, // Number of total ratings
+  },
+  contact: {
+    phone: "+40 21 123 4567",
+    email: "contact@salapalatuluiclinic.ro",
+    website: "https://www.salapalatuluiclinic.ro",
   },
   reviews: [
     {
@@ -81,12 +95,28 @@ const clinic = {
       helpful: { yes: 3, no: 0 },
     },
   ],
+  services: [
+    "Consultații generale",
+    "Consultații specializate",
+    "Analize de laborator",
+    "Radiografii și ecografii",
+    "Tratament ambulatoriu",
+    "Vaccinări",
+    "Consultații online",
+  ],
+  insuranceAccepted: [
+    "Allianz",
+    "Signal Iduna",
+    "Generali",
+    "Uniqa",
+    "Groupama",
+  ],
 };
 
 const tabs = [
   { name: "Overview", component: ClinicOverview },
   { name: "Gallery", component: ClinicGallery },
-  { name: "Map", component: Map },
+  { name: "Map", component: ClinicMap },
   { name: "Reviews", component: Reviews },
 ];
 

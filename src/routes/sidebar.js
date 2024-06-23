@@ -1,72 +1,53 @@
-/**
- * ⚠ These are used just to render the Sidebar!
- * You can include any link here, local or external.
- *
- * If you're looking to actual Router routes, go to
- * `routes/index.js`
- */
+// src/routes/sidebar.ts
 const routes = [
   {
-    path: "/app/home", // the url
-    icon: "HomeIcon", // the component being exported from icons/index.js
-    name: "Home", // name that appear in Sidebar
+    path: "/app/home",
+    icon: "HomeIcon",
+    name: "Home",
+    roles: ["user", "medic", "admin"], // accessible to all roles
+    public: true, // accessible without login
   },
   {
     path: "/app/medic-search",
-    icon: "Medic",
+    icon: "MedicIcon",
     name: "Search Medics",
+    roles: ["user", "medic", "admin"], // accessible to all roles
+    public: true, // accessible without login
   },
   {
     path: "/app/clinics",
     icon: "ClinicIcon",
     name: "Search Clinics",
+    roles: ["user", "medic", "admin"], // accessible to all roles
+    public: true, // accessible without login
   },
   {
     path: "/app/medical-history",
     icon: "MedicalHistoryIcon",
     name: "Medical History",
+    roles: ["user", "admin"], // accessible to users and admins only
+    public: false, // accessible only after login
   },
   {
-    path: "/app/buttons",
-    icon: "ButtonsIcon",
-    name: "Buttons",
+    path: "/app/manage-schedule",
+    icon: "ScheduleIcon",
+    name: "Manage Schedule",
+    roles: ["medic"], // accessible to medics only
+    public: false, // accessible only after login
   },
   {
-    path: "/app/modals",
-    icon: "ModalsIcon",
-    name: "Modals",
+    path: "/app/see-patients",
+    icon: "PatientsIcon",
+    name: "See Patients",
+    roles: ["medic"], // accessible to medics only
+    public: false, // accessible only after login
   },
   {
-    path: "/app/tables",
-    icon: "TablesIcon",
-    name: "Tables",
-  },
-  {
-    icon: "PagesIcon",
-    name: "Pages",
-    routes: [
-      // submenu
-      {
-        path: "/login",
-        name: "Login",
-      },
-      {
-        path: "/create-account",
-        name: "Create account",
-      },
-      {
-        path: "/forgot-password",
-        name: "Forgot password",
-      },
-      {
-        path: "/app/404",
-        name: "404",
-      },
-      {
-        path: "/app/blank",
-        name: "Blank",
-      },
-    ],
+    path: "/app/my-calendar",
+    icon: "CalendarIcon",
+    name: "My Calendar",
+    roles: ["medic"], // accessible to medics only
+    public: false, // accessible only after login
   },
 ];
 

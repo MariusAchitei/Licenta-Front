@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@windmill/react-ui";
 import { FaMapLocationDot } from "react-icons/fa6";
+import { NavLink } from "react-router-dom";
 
 export default function ClinicCard({ clinic }) {
   return (
@@ -48,8 +49,12 @@ export default function ClinicCard({ clinic }) {
           </div>
         </div>
         <div className="mt-4 flex flex-col space-y-2 text-right md:ml-6 md:mt-0">
-          <Button>View Clinic</Button>
-          <Button layout="outline">Make an Appointment</Button>
+          <NavLink to="/app/clinic-detail">
+            <Button>View Clinic</Button>
+          </NavLink>
+          <NavLink to="/app/create-appointment">
+            <Button layout="outline">Make an Appointment</Button>
+          </NavLink>
           <a href={clinic.mapLink}>
             <FaMapLocationDot className="m-auto size-14 rounded-full bg-gray-100 p-1 text-purple-500" />
           </a>

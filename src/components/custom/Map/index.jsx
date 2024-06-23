@@ -6,8 +6,6 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 
-// import ClinicModal from "@components/ClinicModal";
-
 // const containerStyle = {
 //   width: "100%",
 //   height: "400px",
@@ -32,14 +30,61 @@ function Map() {
       name: "Clinic 2",
       location: { lat: 47.16947590980538, lng: 27.588296313851572 },
     },
+    {
+      id: 3,
+      name: "Clinic 3",
+      location: { lat: 47.158227, lng: 27.601441 },
+    },
+    {
+      id: 4,
+      name: "Clinic 4",
+      location: { lat: 47.155555, lng: 27.586789 },
+    },
+    {
+      id: 5,
+      name: "Clinic 5",
+      location: { lat: 47.162838, lng: 27.590689 },
+    },
+    {
+      id: 6,
+      name: "Clinic 6",
+      location: { lat: 47.168971, lng: 27.593875 },
+    },
+    {
+      id: 7,
+      name: "Clinic 7",
+      location: { lat: 47.161982, lng: 27.579562 },
+    },
+    {
+      id: 8,
+      name: "Clinic 8",
+      location: { lat: 47.170647, lng: 27.585833 },
+    },
+    {
+      id: 9,
+      name: "Clinic 9",
+      location: { lat: 47.167391, lng: 27.573309 },
+    },
+    {
+      id: 10,
+      name: "Clinic 10",
+      location: { lat: 47.158106, lng: 27.570696 },
+    },
+    {
+      id: 11,
+      name: "Clinic 11",
+      location: { lat: 47.171645, lng: 27.589232 },
+    },
+    {
+      id: 12,
+      name: "Clinic 12",
+      location: { lat: 47.160822, lng: 27.581545 },
+    },
   ];
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyC6qvAEkBdH88CSgYmIGMDYKdjJRhJXCm8",
   });
-
-  console.log("API KEY:");
-  console.log(process.env.MAPS_API_KEY);
 
   const mapRef = useRef(null);
   const onLoad = React.useCallback(function callback(map) {
@@ -82,10 +127,17 @@ function Map() {
           onCloseClick={() => setSelectedClinic(null)}
         >
           <div>
-            {/* <ClinicModal
-              clinic={selectedClinic}
-              onClose={() => setSelectedClinic(null)}
-            /> */}
+            <h4>{selectedClinic.name}</h4>
+            <button
+              onClick={() =>
+                window.open(
+                  `https://maps.google.com/?q=${selectedClinic.name}`,
+                  "_blank",
+                )
+              }
+            >
+              Get Directions
+            </button>
           </div>
         </InfoWindow>
       )}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { LuUser, LuDna } from "react-icons/lu";
 import {
   BsFillPersonLinesFill,
@@ -13,28 +13,37 @@ import { Tab } from "@headlessui/react";
 import ClinicCard from "pages/clinics/ClinicList2/ClinicCard";
 import DoctorCard from "pages/medics/MedicSearch/DoctorCard";
 import FilesGallery from "components/FileGallery";
-
 import clinics from "pages/clinics/ClinicList2/clinics";
-
 import { Button } from "@windmill/react-ui";
+import classNames from "classnames";
+
+const TabClasses = (selected) =>
+  classNames(
+    "w-full rounded-lg py-2.5 text-sm font-medium leading-5",
+    selected ? "bg-white text-blue-700 shadow" : "text-blue-700",
+  );
 
 const TreatmentPlanDetail = () => {
   const plan = {
     title: "Physical Therapy",
-    diagnostic: "Lower back pain due to muscle strain",
-    startDate: "2024-06-01",
-    endDate: "2024-07-01",
-    status: "In Progress",
+    diagnostic: "Lumbar Disc Herniation",
+    startDate: "2022-05-01",
+    endDate: "2022-06-01",
+    nextAppointment: "2022-05-15",
+    appointmentCount: 10,
+    status: "Completed", // Options: 'Completed', 'In Progress', 'Pending'
+    photo:
+      "https://huffmanclinic.com/wp-content/uploads/2019/08/herniated-disc-1080x600.jpg",
     medication: "Ibuprofen",
     clinic: "Downtown Health Clinic",
     medic: {
-      name: "Dr. Jane Smith",
-      specialty: "Dermatology",
-      location: "San Francisco, USA",
-      experience: 8,
-      rating: 5,
-      reviews: 30,
-      image: "https://via.placeholder.com/300",
+      name: "Dr. Ionescu Maria",
+      specialty: "Orthopedics",
+      location: "Bucharest, Romania",
+      experience: 15,
+      rating: 4.7,
+      reviews: 128,
+      image: "https://via.placeholder.com/150",
     },
     services: ["Consultation", "Physical Therapy Session", "Follow-up"],
     files: [
@@ -45,26 +54,40 @@ const TreatmentPlanDetail = () => {
     appointments: [
       {
         id: 1,
-        date: "2024-06-20",
-        reason: "Routine Checkup",
-        diagnostic: "Healthy",
+        date: "2022-05-01",
+        reason: "Initial Consultation",
+        diagnostic: "Lumbar Disc Herniation",
       },
       {
         id: 2,
-        date: "2024-06-21",
-        reason: "Flu Symptoms",
-        diagnostic: "Influenza",
+        date: "2022-05-15",
+        reason: "Physical Therapy Session",
+        diagnostic: "Improvement noted",
       },
     ],
     medicationHistory: [
-      { id: 1, date: "2024-06-01", medication: "Ibuprofen", dose: "200mg" },
+      { id: 1, date: "2022-05-01", medication: "Ibuprofen", dose: "200mg" },
+      { id: 2, date: "2022-05-05", medication: "Naproxen", dose: "250mg" },
+      { id: 3, date: "2022-05-10", medication: "Paracetamol", dose: "500mg" },
     ],
     diagnosticsHistory: [
       {
         id: 1,
-        date: "2024-06-01",
-        diagnostic: "Lower back pain due to muscle strain",
+        date: "2022-05-01",
+        diagnostic: "Lumbar Disc Herniation",
       },
+      {
+        id: 2,
+        date: "2022-05-15",
+        diagnostic: "Sciatica",
+      },
+    ],
+    recommendations: [
+      "Maintain good posture.",
+      "Avoid lifting heavy objects.",
+      "Engage in regular low-impact exercises.",
+      "Use ergonomic furniture.",
+      "Apply hot or cold packs to reduce pain.",
     ],
   };
 
@@ -95,7 +118,8 @@ const TreatmentPlanDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="mt-3 min-h-screen rounded-3xl bg-gray-100 p-8">
+      <h2 className="text-center text-3xl">Treatment plan</h2>
       {/* Plan Details Card */}
       {TreatmentPlanCard()}
 
@@ -133,33 +157,19 @@ const TreatmentPlanDetail = () => {
       <div className="mx-auto my-4 max-w-4xl overflow-hidden rounded-xl bg-white p-6 shadow-md">
         <Tab.Group>
           <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
-            <Tab
-              className={({ selected }) =>
-                selected
-                  ? "w-full rounded-lg bg-white py-2.5 text-sm font-medium leading-5 text-blue-700"
-                  : "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700"
-              }
-            >
-              Appointments
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                selected
-                  ? "w-full rounded-lg bg-white py-2.5 text-sm font-medium leading-5 text-blue-700"
-                  : "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700"
-              }
-            >
-              Medication History
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                selected
-                  ? "w-full rounded-lg bg-white py-2.5 text-sm font-medium leading-5 text-blue-700"
-                  : "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700"
-              }
-            >
-              Diagnostics
-            </Tab>
+            {[
+              "Appointments",
+              "Medication History",
+              "Diagnostics",
+              "Recommendations",
+            ].map((tab, index) => (
+              <Tab
+                key={index}
+                className={({ selected }) => TabClasses(selected)}
+              >
+                {tab}
+              </Tab>
+            ))}
           </Tab.List>
           <Tab.Panels className="mt-4">
             <Tab.Panel className="rounded-lg bg-gray-50 p-4 shadow-sm">
@@ -196,6 +206,15 @@ const TreatmentPlanDetail = () => {
                 ))}
               </ul>
             </Tab.Panel>
+            <Tab.Panel className="rounded-lg bg-gray-50 p-4 shadow-sm">
+              <ul className="list-disc pl-5">
+                {plan.recommendations.map((recommendation, index) => (
+                  <li key={index} className="mb-2">
+                    <div className="text-gray-800">{recommendation}</div>
+                  </li>
+                ))}
+              </ul>
+            </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
       </div>
@@ -209,7 +228,7 @@ const TreatmentPlanDetail = () => {
           <div className="md:flex-shrink-0">
             <img
               className="h-48 w-full object-cover md:w-48"
-              src="https://via.placeholder.com/150"
+              src={plan.photo}
               alt="Plan Image"
             />
           </div>
@@ -226,7 +245,9 @@ const TreatmentPlanDetail = () => {
             </p>
             <div className="mt-4">
               <span
-                className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${getStatusClass(plan.status)}`}
+                className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${getStatusClass(
+                  plan.status,
+                )}`}
               >
                 {plan.status}
               </span>

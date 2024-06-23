@@ -4,7 +4,7 @@ import { FiX } from "react-icons/fi";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 
-const ChatWindow = ({ isOpen, messages, onSendMessage, onClose }) => {
+const ChatWindow = ({ isOpen, messages, onSendMessage, onClose, isTyping }) => {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -13,7 +13,7 @@ const ChatWindow = ({ isOpen, messages, onSendMessage, onClose }) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isTyping]);
 
   return (
     <Transition show={isOpen} as={React.Fragment}>
@@ -29,7 +29,7 @@ const ChatWindow = ({ isOpen, messages, onSendMessage, onClose }) => {
           style={{
             boxShadow: "0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05)",
           }}
-          className="fixed bottom-4 right-4 flex h-[634px] w-[440px] flex-col space-y-3 rounded-lg border border-[#e5e7eb] bg-white p-3"
+          className="fixed bottom-4 right-4 flex h-[634px] w-[440px] transform-gpu flex-col space-y-3 rounded-lg border border-[#e5e7eb] bg-white p-3 transition-transform duration-300 ease-in-out"
         >
           <div className="flex items-center justify-between pb-3">
             <h2 className="text-lg font-semibold tracking-tight">Chatbot</h2>
@@ -45,8 +45,16 @@ const ChatWindow = ({ isOpen, messages, onSendMessage, onClose }) => {
             style={{ minWidth: "100%" }}
           >
             {messages.map((msg, index) => (
-              <ChatMessage key={index} isAi={msg.isAi} message={msg.message} />
+              <ChatMessage
+                key={index}
+                isAi={msg.isAi}
+                message={msg.message}
+                isError={msg.isError}
+              />
             ))}
+            {isTyping && (
+              <ChatMessage isAi={true} message="..." isTyping={true} />
+            )}
             <div ref={messagesEndRef} />
           </div>
           <ChatInput onSendMessage={onSendMessage} />

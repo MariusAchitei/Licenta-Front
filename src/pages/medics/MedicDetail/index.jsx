@@ -12,7 +12,8 @@ const doctor = {
   rating: 4.97,
   reviews: 47,
   views: 29157,
-  image: "https://via.placeholder.com/100",
+  image:
+    "https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=600",
   clinicName: "Clinica Sala Palatului",
   clinicAddress: "BUCURESTI, Str. Ion Campineanu nr. 23, Sector 1",
   mapLink: "#",

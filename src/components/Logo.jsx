@@ -10,12 +10,12 @@ import { NavLink } from "react-router-dom";
 // utils
 import PropTypes from "prop-types";
 
-const Img = styled.img`
-  width: 30px;
-  height: 30px;
-  will-change: transform;
-  transition: transform var(--transition);
-`;
+// const Img = styled.img`
+//   width: 30px;
+//   height: 30px;
+//   will-change: transform;
+//   transition: transform var(--transition);
+// `;
 
 const Wrapper = styled.a`
   display: inline-flex;
@@ -36,8 +36,8 @@ const Text = styled.span`
 
 const Logo = ({ compact }) => {
   return (
-    <Wrapper as={NavLink} to="/app/home" className="logo">
-      <Img src={logo} alt="Clinic Care" />
+    <Wrapper as={NavLink} to="/app/home" className="logo h-[85%]">
+      <img src={logo} alt="Clinic Care" className="h-full" />
       {!compact ? (
         <Text>
           Clinic<span className="text-blue-500">Care</span>

@@ -20,10 +20,9 @@ const TypingMessage = ({ message, isAi }) => {
           clearInterval(typingInterval);
           setIsTypingComplete(true);
         }
-      }, 100);
+      }, 500);
+
       return () => clearInterval(typingInterval);
-    } else {
-      setDisplayedText(message);
     }
   }, [message, isAi]);
 

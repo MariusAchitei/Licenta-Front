@@ -18,80 +18,94 @@ const MedicalHistory = () => {
   const [user, setUser] = useState({});
   useEffect(() => {
     setUser({
-      name: "Achitei Marius",
+      name: "Achitei Viorel",
       gender: "Male",
-      age: 30,
-      height: 180,
-      bloodType: "A+",
+      age: 50,
+      height: 175,
+      bloodType: "O+",
       appointments: [
         {
           id: 1,
-          date: "2024-06-20",
+          date: "2021-03-15",
           reason: "Routine Checkup",
           diagnostic: "Healthy",
-          medic: "Dr. John Doe",
+          medic: "Dr. Popescu Adrian",
           department: "General Medicine",
           medicalService: "Consultation",
         },
         {
           id: 2,
-          date: "2024-06-21",
-          reason: "Flu Symptoms",
-          diagnostic: "Influenza",
-          medic: "Dr. Jane Smith",
-          department: "Internal Medicine",
+          date: "2021-06-10",
+          reason: "High Blood Pressure",
+          diagnostic: "Hypertension",
+          medic: "Dr. Ionescu Maria",
+          department: "Cardiology",
           medicalService: "Consultation",
         },
         {
           id: 3,
-          date: "2024-06-22",
+          date: "2022-04-20",
           reason: "Back Pain",
-          diagnostic: "Lumbar Strain",
-          medic: "Dr. Emily Johnson",
+          diagnostic: "Lumbar Disc Herniation",
+          medic: "Dr. Radulescu Bogdan",
           department: "Orthopedics",
-          medicalService: "Physical Therapy",
+          medicalService: "MRI Scan",
+        },
+        {
+          id: 4,
+          date: "2023-01-15",
+          reason: "Chest Pain",
+          diagnostic: "Angina Pectoris",
+          medic: "Dr. Georgescu Elena",
+          department: "Cardiology",
+          medicalService: "ECG",
+        },
+        {
+          id: 5,
+          date: "2023-12-05",
+          reason: "Diabetes Follow-up",
+          diagnostic: "Type 2 Diabetes",
+          medic: "Dr. Vasile Florin",
+          department: "Endocrinology",
+          medicalService: "Blood Test",
         },
       ],
       plans: [
         {
           id: 1,
           title: "Physical Therapy",
-          diagnostic: "Lower back pain due to muscle strain",
-          startDate: "2024-06-01",
-          endDate: "2024-07-01",
-          nextAppointment: "2024-06-25",
-          appointmentCount: 5,
-          status: "In Progress", // Options: 'Completed', 'In Progress', 'Pending'
+          diagnostic: "Lumbar Disc Herniation",
+          startDate: "2022-05-01",
+          endDate: "2022-06-01",
+          nextAppointment: "2022-05-15",
+          appointmentCount: 10,
+          status: "Completed", // Options: 'Completed', 'In Progress', 'Pending'
+          photo:
+            "https://huffmanclinic.com/wp-content/uploads/2019/08/herniated-disc-1080x600.jpg",
         },
         {
           id: 2,
-          title: "Cardiac Rehabilitation",
-          diagnostic: "Post-heart attack recovery",
-          startDate: "2024-05-01",
-          endDate: "2024-08-01",
-          nextAppointment: "2024-06-30",
-          appointmentCount: 8,
-          status: "Pending", // Options: 'Completed', 'In Progress', 'Pending'
+          title: "Hypertension Management",
+          diagnostic: "Hypertension",
+          startDate: "2021-06-15",
+          endDate: "2022-06-15",
+          nextAppointment: "2022-01-10",
+          appointmentCount: 12,
+          status: "Completed", // Options: 'Completed', 'In Progress', 'Pending'
+          photo:
+            "https://www.medicalindependent.ie/wp-content/uploads/2023/03/mindo_210323_hypertension.jpg",
         },
         {
           id: 3,
           title: "Diabetes Management",
           diagnostic: "Type 2 Diabetes",
-          startDate: "2024-01-01",
-          endDate: "2024-12-31",
-          nextAppointment: "2024-07-01",
+          startDate: "2023-01-01",
+          endDate: "2023-12-31",
+          nextAppointment: "2023-07-01",
           appointmentCount: 12,
-          status: "Completed", // Options: 'Completed', 'In Progress', 'Pending'
-        },
-        {
-          id: 4,
-          title: "Hypertension Control",
-          diagnostic: "High blood pressure",
-          startDate: "2024-03-01",
-          endDate: "2024-06-01",
-          nextAppointment: "2024-06-22",
-          appointmentCount: 4,
           status: "In Progress", // Options: 'Completed', 'In Progress', 'Pending'
+          photo:
+            "https://www.ox.ac.uk/sites/files/oxford/styles/ow_medium_feature/s3/field/field_image_main/shutterstock_1439349791.jpg?itok=aLF3O1p0",
         },
       ],
     });
@@ -115,7 +129,6 @@ const MedicalHistory = () => {
 export default MedicalHistory;
 
 function Siderbar(user) {
-  console.log(user);
   return (
     <section className="flex-col text-center lg:w-1/3 lg:flex-initial">
       <div className="my-4 flex h-fit flex-col justify-center space-y-11 overflow-hidden rounded-3xl bg-white p-10 text-center align-middle shadow-md">
@@ -124,22 +137,18 @@ function Siderbar(user) {
           <h3 className="text-center font-bold">{user.name}</h3>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          {/* <div className="flex"> */}
           <InfoCard title="Gender" value={user.gender}>
             <LuDna className="m-2 size-16 rounded-full border-2 border-green-400 p-2" />
           </InfoCard>
           <InfoCard title="Age" value={`${user.age} y.o.`}>
             <BsFillPersonLinesFill className="m-2 size-16 rounded-full border-2 border-blue-400 p-2" />
           </InfoCard>
-          {/* </div> */}
-          {/* <div className="flex"> */}
           <InfoCard title="Height" value={`${user.height} cm`}>
             <GiBodyHeight className="m-2 size-16 rounded-full border-2 border-yellow-300 p-2" />
           </InfoCard>
           <InfoCard title="Blood type" value={user.bloodType}>
             <MdBloodtype className="m-2 size-16 rounded-full border-2 border-red-300 p-2" />
           </InfoCard>
-          {/* </div> */}
         </div>
       </div>
       <div>

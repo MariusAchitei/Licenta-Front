@@ -26,12 +26,18 @@ import { ReactComponent as DropdownIcon } from "./dropdown.svg";
 import { ReactComponent as OutlinePersonIcon } from "./outlinePerson.svg";
 import { ReactComponent as OutlineCogIcon } from "./outlineCog.svg";
 import { ReactComponent as OutlineLogoutIcon } from "./outlineLogout.svg";
-import { FaUserDoctor as Medic } from "react-icons/fa6";
+import {
+  FaUserDoctor as MedicIcon,
+  FaUsers as PatientsIcon,
+} from "react-icons/fa6";
+
 import {
   FaRegCalendarAlt as CalendarIcon,
   FaBookMedical as MedicalHistoryIcon,
   FaRegHospital as ClinicIcon,
 } from "react-icons/fa";
+import { GrSchedules as ScheduleIcon } from "react-icons/gr";
+// import { BsCalendar2Week as CalendarIcon } from "react-icons/bs";
 
 export {
   ButtonsIcon,
@@ -62,8 +68,11 @@ export {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
-  Medic,
+  MedicIcon,
   CalendarIcon,
   MedicalHistoryIcon,
   ClinicIcon,
+  ScheduleIcon,
+  PatientsIcon,
+  // CalendarIcon,
 };

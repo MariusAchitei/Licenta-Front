@@ -9,7 +9,7 @@ export default function TreatmentPlanCard(plan) {
         <div className="md:flex-shrink-0">
           <img
             className="h-48 w-full object-cover md:w-48"
-            src={TreatmentPlanPlaceholder}
+            src={plan.photo || TreatmentPlanPlaceholder}
             alt="Plan Image"
           />
         </div>
@@ -38,7 +38,9 @@ export default function TreatmentPlanCard(plan) {
             <span className="text-sm">Appointments:</span>{" "}
             {plan.appointmentCount}
           </p>
-          <Button>See details</Button>
+          <a href="/app/treatment-plan">
+            <Button>See details</Button>
+          </a>
         </div>
       </div>
     </div>
