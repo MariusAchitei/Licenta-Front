@@ -39,7 +39,7 @@ const Home = () => {
           key="map"
           className="flex flex-col items-center space-y-10 rounded-lg border border-gray-200 bg-white px-2 py-10 text-lg shadow-md md:px-10"
         >
-          <h2 className="text-center text-3xl">Clinics in your aria</h2>
+          <h2 className="text-center text-3xl">Clinics in your area</h2>
           <Map />
         </div>
         {/* // </Page> */}

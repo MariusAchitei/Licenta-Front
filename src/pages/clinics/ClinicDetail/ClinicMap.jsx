@@ -12,9 +12,9 @@ const containerStyle = {
 };
 
 export default function ClinicMap({ data }) {
-  const clinic = data;
   const [location, setLocation] = useState(null);
   const [selectedClinic, setSelectedClinic] = useState(null);
+  const clinic = data;
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyC6qvAEkBdH88CSgYmIGMDYKdjJRhJXCm8",

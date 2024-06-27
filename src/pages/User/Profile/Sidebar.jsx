@@ -3,7 +3,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { LuUser } from "react-icons/lu";
 import Container from "components/custom/Container";
 
-const Sidebar = ({ sections }) => {
+const Sidebar = ({ sections, data }) => {
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId).scrollIntoView({ behavior: "smooth" });
   };
@@ -15,8 +15,8 @@ const Sidebar = ({ sections }) => {
           <LuUser className="size-40" />
         </div>
         <div className="mt-4 text-center">
-          <h2 className="font-semibold">Marius</h2>
-          <p className="text-gray-500">5021025226727</p>
+          <h2 className="font-semibold">{`${data?.personalInfo.lastName} ${data?.personalInfo.firstName}`}</h2>
+          <p className="text-gray-500">{data?.personalInfo.personalId}</p>
         </div>
       </div>
       <div className="flex flex-col items-center space-y-3 p-6">

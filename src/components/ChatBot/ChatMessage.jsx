@@ -26,7 +26,7 @@ const ChatMessage = ({ isAi, message, isError, isTyping }) => {
         ) : (
           <p className="leading-relaxed">
             <span className="block font-bold text-gray-700">
-              {isAi ? "AI" : "You"}
+              {isAi ? "Assistant" : "You"}
             </span>
             {message}
           </p>

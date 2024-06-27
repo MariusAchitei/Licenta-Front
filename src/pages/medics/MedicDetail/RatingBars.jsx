@@ -1,10 +1,10 @@
 import React from "react";
 
 const ratings = [
-  { stars: 5, count: 9, color: "bg-green-500" },
+  { stars: 5, count: 1, color: "bg-green-500" },
   { stars: 4, count: 1, color: "bg-yellow-400" },
-  { stars: 3, count: 0, color: "bg-yellow-300" },
-  { stars: 2, count: 0, color: "bg-yellow-200" },
+  { stars: 3, count: 2, color: "bg-yellow-300" },
+  { stars: 2, count: 1, color: "bg-yellow-200" },
   { stars: 1, count: 0, color: "bg-red-500" },
 ];
 

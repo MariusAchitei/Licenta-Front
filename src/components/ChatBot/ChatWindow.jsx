@@ -49,7 +49,7 @@ const ChatWindow = ({ isOpen, messages, onSendMessage, onClose, isTyping }) => {
                 key={index}
                 isAi={msg.isAi}
                 message={msg.message}
-                isError={msg.isError}
+                // isError={msg.isError}
               />
             ))}
             {isTyping && (

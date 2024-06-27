@@ -3,9 +3,10 @@ import RatingBars from "../../../../pages/medics/MedicDetail/RatingBars";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import AddReview from "./AddReview";
 
-export default function Reviews({ data, checkPermission }) {
+export default function Reviews({ data, checkPermission = true }) {
   const { reviews, rating } = data;
-  const [showAddReview, setShowAddReview] = useState(false);
+  // const [cal, setcal] = useState(null);
+  // const [showAddReview, setShowAddReview] = useState(false);
 
   const handleAddReview = (review) => {
     // Logic to add the review to the reviews list
@@ -17,9 +18,9 @@ export default function Reviews({ data, checkPermission }) {
       verifiedPurchase: true, // This should be dynamically determined
       helpful: { yes: 0, no: 0 },
     });
-    setShowAddReview(false);
+    // setShowAddReview(false);
   };
-
+  return <></>;
   return (
     <div className="rounded-lg bg-white p-6 shadow-md">
       <h2 className="text-2xl font-bold text-gray-900">Recenzii</h2>
@@ -37,7 +38,7 @@ export default function Reviews({ data, checkPermission }) {
           <span className="ml-2 text-gray-600">({reviews.length} ratings)</span>
           <button
             className="mt-4 rounded-lg bg-yellow-300 px-4 py-2 text-white"
-            onClick={() => setShowAddReview(!showAddReview)}
+            // onClick={() => setShowAddReview(!showAddReview)}
           >
             Add your feedback
           </button>
@@ -67,7 +68,7 @@ export default function Reviews({ data, checkPermission }) {
           </select>
         </div>
       </div>
-      {showAddReview && (
+      {true && (
         <AddReview
           onSubmit={handleAddReview}
           checkPermission={checkPermission}

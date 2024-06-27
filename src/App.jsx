@@ -10,22 +10,29 @@ import {
 } from "react-router-dom";
 import Layout from "containers/Layout";
 
+import { Amplify } from "aws-amplify";
+import awsconfig from "utils/awsconfig";
+
 import routes from "routes";
 import { ChatBotComponent as ChatBot } from "components/ChatBot";
 import { UserProvider } from "contexts/UserContext";
 import ProtectedRoute from "components/ProtectedRoute";
+import { ErrorProvider } from "contexts/ErrorConntext";
 
+// Amplify.configure(awsconfig);
 // const Layout = lazy(() => import("containers/Layout"));
 const Login = lazy(() => import("pages/Login"));
 const CreateAccount = lazy(() => import("pages/CreateAccount"));
 const ForgotPassword = lazy(() => import("pages/ForgotPassword"));
 const Page404 = lazy(() => import("pages/404"));
 const PageUnauthorized = lazy(() => import("pages/PageUnauthorized"));
+const Test = lazy(() => import("pages/Test"));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route index element={<Navigate to="/login" />} />
+      <Route path="test" element={<Test />} />
       <Route path="login" element={<Login />} />
       <Route path="create-account" element={<CreateAccount />} />
       <Route path="forgot-password" element={<ForgotPassword />} />
@@ -52,10 +59,12 @@ const router = createBrowserRouter(
 function App() {
   return (
     <>
-      <UserProvider>
-        <RouterProvider router={router} />
-        <ChatBot />
-      </UserProvider>
+      <ErrorProvider>
+        <UserProvider>
+          <RouterProvider router={router} />
+          <ChatBot />
+        </UserProvider>
+      </ErrorProvider>
     </>
   );
 }

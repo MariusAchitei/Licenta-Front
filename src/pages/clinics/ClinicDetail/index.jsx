@@ -31,8 +31,8 @@ const clinic = {
   coordinates: { lat: 44.437926, lng: 26.096306 },
   mapLink: "https://maps.google.com/?q=Clinica+Sala+Palatului",
   rating: {
-    score: 4.97,
-    count: 182, // Number of total ratings
+    score: 3.4,
+    count: 20, // Number of total ratings
   },
   contact: {
     phone: "+40 21 123 4567",

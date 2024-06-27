@@ -1,6 +1,12 @@
 import DetailTabs from "./DetailTabs";
 
-export default function DetailLayout({ title, tabs, cardComponent, data }) {
+export default function DetailLayout({
+  title,
+  tabs,
+  cardComponent,
+  data,
+  props = {},
+}) {
   return (
     <div className="min-h-screen bg-gray-50 text-lg">
       <header className="bg-white shadow">

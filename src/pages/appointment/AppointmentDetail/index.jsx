@@ -12,16 +12,21 @@ import ClinicCard from "pages/clinics/ClinicList2/ClinicCard";
 import DoctorCard from "pages/medics/MedicSearch/DoctorCard";
 import TreatmentPlanCard from "pages/MedicalHistory/TreatmentPlanCard";
 import clinics from "pages/clinics/ClinicList2/clinics";
+import Clinic1 from "assets/images/clinics/1.png";
+import { Button } from "@windmill/react-ui";
 
 import FilesGallery from "components/FileGallery";
+import { duration } from "@mui/material";
 
 const AppointmentDetail = () => {
   const appointment = {
     id: 1,
     photo: "https://via.placeholder.com/150",
     reason: "Routine Checkup",
-    startDate: "2024-06-20",
-    endDate: "2024-06-20",
+    date: "2024-06-20",
+    startTime: "10:00",
+    endTime: "11:00",
+    duration: "60 minutes",
     markedDate: "2024-06-20",
     recommendations: "Take rest and drink plenty of water.",
     clinic: "Downtown Health Clinic",
@@ -44,6 +49,12 @@ const AppointmentDetail = () => {
       rating: 5,
       reviews: 30,
       image: "https://via.placeholder.com/300",
+      clinic: {
+        name: "Clinica Inimii",
+        logo: Clinic1,
+        location: "Str. Sperantei nr. 1, Bucharest, Romania",
+        coordinates: { lat: 44.4268, lng: 26.1025 },
+      },
     },
     status: "Completed",
     services: {
@@ -104,16 +115,19 @@ const AppointmentDetail = () => {
               {appointment.reason}
             </p>
             <p className="mt-2 text-gray-500">
-              Start Date: {appointment.startDate} <br />
-              End Date: {appointment.endDate}
+              Date: {appointment.date} <br />
+              Start time: {appointment.startTime} <br />
+              End time: {appointment.endTime} <br />
+              Duration: {appointment.duration}
             </p>
-            <div className="mt-4">
-              <span
-                className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${getStatusClass(appointment.status)}`}
-              >
-                {appointment.status}
-              </span>
-            </div>
+          </div>
+          <div className="ml-auto  mt-4 flex flex-col justify-around">
+            <span
+              className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${getStatusClass(appointment.status)}`}
+            >
+              {appointment.status}
+            </span>
+            <Button>Schedule a follow up</Button>
           </div>
         </div>
       </div>

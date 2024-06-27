@@ -16,22 +16,19 @@ const PersonalInfo = ({ data }) => {
 
       <div>
         <p>
-          <strong>Firstname:</strong> {data.firstName}
+          <strong>Blood type:</strong> {data.bloodType}
         </p>
         <p>
-          <strong>Lastname:</strong> {data.lastName}
+          <strong>Weight:</strong> {data.weight}
         </p>
         <p>
-          <strong>Personal ID</strong> {data.personalId}
+          <strong>Height:</strong> {data.height}
         </p>
         <p>
-          <strong>Birth date:</strong> {data.dateOfBirth}
+          <strong>Profession:</strong> {data.profession}
         </p>
         <p>
-          <strong>County: </strong> {data.county}
-        </p>
-        <p>
-          <strong>City: </strong> {data.city}
+          <strong>Marital status:</strong> {data.maritalStatus}
         </p>
       </div>
     </>

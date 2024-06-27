@@ -1,6 +1,7 @@
 import { Button } from "@windmill/react-ui";
 import TreatmentPlanPlaceholder from "assets/images/treatment-plan-placeholder.png";
 import { getStatusClass } from ".";
+import Clinic5 from "assets/images/clinics/5.png";
 
 export default function TreatmentPlanCard(plan) {
   return (

@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ClinicCard from "./ClinicCard";
+import { UserContext } from "contexts/UserContext";
 
 import clinics from "./clinics.js";
+import { Button } from "@windmill/react-ui";
+import EditClinicModal from "./EditClinicModal";
 
 export default function ClinicList() {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const { user } = useContext(UserContext);
   const [county, setCounty] = useState("");
   const [search, setSearch] = useState("");
+
+  const handleAddClinic = () => {
+    setModalOpen(true);
+  };
+
+  const handleSave = (clinic) => {};
 
   return (
     <div className="mx-auto max-w-[80vw] py-6">
@@ -27,6 +38,9 @@ export default function ClinicList() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        {user?.role == "admin" && (
+          <Button onClick={handleAddClinic}>Create</Button>
+        )}
       </div>
       <div className="space-y-6">
         {clinics
@@ -36,9 +50,19 @@ export default function ClinicList() {
               (!county || clinic.county === county),
           )
           .map((clinic) => (
-            <ClinicCard key={clinic.name} clinic={clinic} />
+            <ClinicCard
+              key={clinic.name}
+              isAdmin={user?.role == "admin"}
+              clinic={clinic}
+            />
           ))}
       </div>
+      <EditClinicModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        createMode={true}
+        onSave={handleSave}
+      />
     </div>
   );
 }

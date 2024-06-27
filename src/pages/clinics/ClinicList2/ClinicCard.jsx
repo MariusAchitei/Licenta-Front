@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@windmill/react-ui";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
+import EditClinicModal from "./EditClinicModal";
 
-export default function ClinicCard({ clinic }) {
+const ClinicCard = ({ clinic, isAdmin }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleEditClick = () => {
+    console.log("Edit Clinic Clicked");
+    setModalOpen(true);
+  };
+
+  const handleSave = (updatedClinic) => {
+    console.log("Saved Clinic Data: ", updatedClinic);
+    setModalOpen(false);
+  };
+
   return (
     <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-md">
       <div className="flex flex-col items-center md:flex-row">
@@ -58,6 +71,11 @@ export default function ClinicCard({ clinic }) {
           <a href={clinic.mapLink}>
             <FaMapLocationDot className="m-auto size-14 rounded-full bg-gray-100 p-1 text-purple-500" />
           </a>
+          {isAdmin && (
+            <Button layout="outline" onClick={handleEditClick}>
+              Edit
+            </Button>
+          )}
         </div>
       </div>
       <div className="mt-4">
@@ -90,6 +108,13 @@ export default function ClinicCard({ clinic }) {
           </div>
         </div>
       </div>
+      <EditClinicModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onSave={handleSave}
+      />
     </div>
   );
-}
+};
+
+export default ClinicCard;

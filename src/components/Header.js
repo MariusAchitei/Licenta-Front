@@ -19,6 +19,7 @@ import {
   WindmillContext,
 } from "@windmill/react-ui";
 import profilePhoto from "assets/photos/profile.png";
+import loginPhoto from "assets/login.png";
 
 function Header() {
   const { mode, toggleMode } = useContext(WindmillContext);
@@ -54,7 +55,7 @@ function Header() {
             </div>
             <Input
               className="pl-8 text-gray-700"
-              placeholder="Search for projects"
+              placeholder="Search for clinics or medics"
               aria-label="Search"
             />
           </div>
@@ -118,7 +119,7 @@ function Header() {
             >
               <Avatar
                 className="align-middle"
-                src={profilePhoto}
+                src={loginPhoto}
                 alt=""
                 aria-hidden="true"
               />

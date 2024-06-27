@@ -1,4 +1,3 @@
-// src/routes/index.ts
 import { lazy } from "react";
 
 const MedicDetail = lazy(() => import("pages/medics/MedicDetail"));
@@ -17,10 +16,10 @@ const CreateAppointment = lazy(
   () => import("pages/appointment/CreateAppointment"),
 );
 const ManageSchedule = lazy(() => import("pages/ManageSchedule"));
-const SeePatients = lazy(() => import("pages/SeePatients"));
+const PatientsList = lazy(() => import("pages/PatientsList"));
 const MyCalendar = lazy(() => import("pages/MyCalendar"));
 const UserDataForm = lazy(() => import("pages/UserDataForm"));
-
+const MedicProfile = lazy(() => import("pages/MedicProfile"));
 // type RouteType = {
 //   path: string;
 //   component: React.LazyExoticComponent<() => JSX.Element>;
@@ -53,7 +52,7 @@ const routes = [
   {
     path: "/medical-history",
     component: MedicalHistory,
-    roles: ["user", "admin"],
+    roles: ["user", "admin", "medic"],
   },
   {
     path: "/medic-search",
@@ -102,12 +101,17 @@ const routes = [
   },
   {
     path: "/see-patients",
-    component: SeePatients,
+    component: PatientsList,
     roles: ["medic"],
   },
   {
     path: "/my-calendar",
     component: MyCalendar,
+    roles: ["medic"],
+  },
+  {
+    path: "/medic-profile",
+    component: MedicProfile,
     roles: ["medic"],
   },
   // Public routes

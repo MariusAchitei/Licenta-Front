@@ -8,6 +8,11 @@ const Step1 = () => {
   const [department, setDepartment] = useState(medicalDepartments[0]);
   const [search, setSearch] = useState("");
   const [services, setServices] = useState(department.services);
+  const [reason, setReason] = useState("");
+
+  const handleReasonChange = (e) => {
+    setReason(e.target.value);
+  };
 
   const handleDepartmentChange = (e) => {
     const selectedDepartment = medicalDepartments.find(
@@ -32,7 +37,14 @@ const Step1 = () => {
   return (
     <div>
       <Card>
+        <label htmlFor="">Reason:</label>
+        <TextInput
+          placeholder="Enter the reason for your appointment (summarized)"
+          value={reason}
+          onChange={handleReasonChange}
+        />
         <div className="mb-4">
+          <label htmlFor="">Department:</label>
           <Select
             onChange={handleDepartmentChange}
             value={department.id}
@@ -45,6 +57,7 @@ const Step1 = () => {
             ))}
           </Select>
         </div>
+        <label htmlFor="">Search service by name:</label>
         <TextInput
           placeholder="Search a medical service"
           value={search}

@@ -1,15 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@windmill/react-ui";
 import { Modal } from "flowbite-react";
 
-export function EditModal(
+function getDateFromDateTime(dateString) {
+  // if (!dateString) return null;
+  return dateString?.split(" ")[0];
+  const [datePart, timePart] = dateString.split(" ");
+
+  // Split the individual components of the date and time
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hours, minutes] = timePart.split(":").map(Number);
+
+  // Create a new Date object using the components
+  const date = new Date(year, month - 1, day, hours, minutes);
+
+  console.log(date);
+}
+
+export function EditModal({
   isEditModalOpen,
   setEditModalOpen,
-  newEventData,
+  selectedEvent,
   setNewEventData,
   handleDeleteEvent,
   handleSaveEvent,
-) {
+}) {
+  const [date, setDate] = useState();
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
+  console.log("S-a selectat");
+  console.log(selectedEvent);
+
+  useEffect(() => {
+    console.log("Dumnezeii mati de cacat");
+    setDate(getDateFromDateTime(selectedEvent?.start));
+    setStartTime(selectedEvent?.start.split(" ")[1]);
+    setEndTime(selectedEvent?.end.split(" ")[1]);
+  }, [isEditModalOpen]);
+
   return (
     <Modal
       dismissible
@@ -18,37 +46,42 @@ export function EditModal(
     >
       <Modal.Header>Edit Event</Modal.Header>
       <Modal.Body>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
+        {/* <label className="mb-2 block text-sm font-medium text-gray-700">
           Title
           <input
             type="text"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={newEventData.title}
+            value={selectedEvent?.title}
             onChange={(e) =>
-              setNewEventData({ ...newEventData, title: e.target.value })
+              setNewEventData({ ...selectedEvent, title: e.target.value })
             }
+          />
+        </label> */}
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          Date
+          <input
+            type="date"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
           />
         </label>
         <label className="mb-2 block text-sm font-medium text-gray-700">
-          Start Date
+          Start time
           <input
-            type="datetime-local"
+            type="time"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={newEventData.start}
-            onChange={(e) =>
-              setNewEventData({ ...newEventData, start: e.target.value })
-            }
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
           />
         </label>
         <label className="mb-2 block text-sm font-medium text-gray-700">
-          End Date
+          Stop time
           <input
-            type="datetime-local"
+            type="time"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={newEventData.end}
-            onChange={(e) =>
-              setNewEventData({ ...newEventData, end: e.target.value })
-            }
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
           />
         </label>
       </Modal.Body>
@@ -56,7 +89,9 @@ export function EditModal(
         <Button layout="outline" onClick={handleDeleteEvent}>
           Delete
         </Button>
-        <Button onClick={handleSaveEvent}>Save</Button>
+        <Button onClick={() => handleSaveEvent(date, startTime, endTime)}>
+          Save
+        </Button>
       </Modal.Footer>
     </Modal>
   );

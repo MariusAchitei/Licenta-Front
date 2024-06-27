@@ -20,15 +20,15 @@ export default function DoctorCard({ doctor }) {
         <p className="text-gray-600">{doctor.location}</p>
         <p className="text-gray-600">{doctor.experience} years of experience</p>
         <div className="mt-2 flex items-center space-x-2">
-          {/* <img
+          <img
             src={doctor.clinic.logo}
             alt={doctor.clinic.name}
             className="size-16 rounded-full"
-          /> */}
-          {/* <div>
+          />
+          <div>
             <p className="text-gray-600">{doctor.clinic.name}</p>
             <p className="text-gray-600">{doctor.clinic.location}</p>
-          </div> */}
+          </div>
         </div>
         <hr />
         <div className="mt-2 flex items-center">

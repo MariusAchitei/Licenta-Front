@@ -4,7 +4,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DetailTabs({ tabs, data }) {
+export default function DetailTabs({ tabs, data, props = {} }) {
   const [currentTab, setCurrentTab] = useState("Overview");
 
   const CurrentComponent =

@@ -5,16 +5,20 @@ const Authentication = ({ data }) => {
   return (
     <div>
       <p>
-        <strong>Last Password Change:</strong> {data.lastPasswordChange}
+        <strong>Gender:</strong> {data.gender}
       </p>
       <p>
-        <strong>Social Authentication:</strong>
+        <strong>Nationality:</strong> {data.nationality}
       </p>
-      <ul>
-        <li>Apple: {data.socialAuth.apple ? "Enabled" : "Disabled"}</li>
-        <li>Google: {data.socialAuth.google ? "Enabled" : "Disabled"}</li>
-        <li>Facebook: {data.socialAuth.facebook ? "Enabled" : "Disabled"}</li>
-      </ul>
+      <p>
+        <strong>Place of birth:</strong> {data.placeOfBirth}
+      </p>
+      <p>
+        <strong>Current residence:</strong> {data.currentResidence}
+      </p>
+      <p>
+        <strong>Address:</strong> {data.address}
+      </p>
     </div>
   );
 };

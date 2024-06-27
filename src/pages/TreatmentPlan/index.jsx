@@ -16,6 +16,7 @@ import FilesGallery from "components/FileGallery";
 import clinics from "pages/clinics/ClinicList2/clinics";
 import { Button } from "@windmill/react-ui";
 import classNames from "classnames";
+import Clinic5 from "assets/images/clinics/5.png";
 
 const TabClasses = (selected) =>
   classNames(
@@ -44,6 +45,12 @@ const TreatmentPlanDetail = () => {
       rating: 4.7,
       reviews: 128,
       image: "https://via.placeholder.com/150",
+      clinic: {
+        name: "Clinica EndoHealth",
+        logo: Clinic5,
+        location: "Str. Sanatatii nr. 4, Constanta, Romania",
+        coordinates: { lat: 44.1598, lng: 28.6348 },
+      },
     },
     services: ["Consultation", "Physical Therapy Session", "Follow-up"],
     files: [

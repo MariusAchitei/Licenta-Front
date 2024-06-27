@@ -80,21 +80,28 @@ export default function DoctorCard({ doctor }) {
           <p className=" text-gray-600">{doctor.specialty}</p>
           <div className="mt-1 flex items-center">
             <div className="flex items-center">
-              {Array(5)
+              {Array(3)
                 .fill(0)
                 .map((_, i) => (
                   <FaStar key={i} className="h-5 w-5 text-yellow-300" />
                 ))}
             </div>
             <span className="ml-2  text-gray-600">
-              {doctor.rating.score} (43 reviews)
+              {doctor.rating.score} (5 reviews)
             </span>
           </div>
           <p className="mt-1  text-gray-600">{doctor.views} views</p>
         </div>
         <div className="flex flex-col space-y-3 text-right">
-          <p className=" text-gray-600">{doctor.clinicName}</p>
-          <p className=" text-gray-600">{doctor.clinicAddress}</p>
+          <img
+            src={doctor.clinic.logo}
+            alt={doctor.clinic.name}
+            className="ml-auto size-16 rounded-full"
+          />
+          <div>
+            <p className="text-gray-600">{doctor.clinic.name}</p>
+            <p className="text-gray-600">{doctor.clinic.location}</p>
+          </div>
           <Button className="ml-auto" layout="outline">
             (see map)
           </Button>

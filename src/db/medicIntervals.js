@@ -4,10 +4,10 @@ const medicIntervals = [
     medics: [
       {
         name: "Dr. Achitei Marius Dumitru",
-        department: "Dermatology",
+        department: "Cardiology",
         rating: 4.25,
         reviewsNb: 100,
-        clinic: "Clinica Regina Maria",
+        clinic: "Hyperclinica Iasi",
         intervals: [
           { start: "08:00:00", end: "08:30:00" },
           { start: "08:30:00", end: "09:00:00" },
@@ -19,7 +19,7 @@ const medicIntervals = [
         department: "Cardiology",
         rating: 4.5,
         reviewsNb: 120,
-        clinic: "Clinica MedLife",
+        clinic: "Hyperclinica Iasi",
         intervals: [
           { start: "08:00:00", end: "08:30:00" },
           { start: "08:30:00", end: "09:00:00" },
@@ -28,10 +28,10 @@ const medicIntervals = [
       },
       {
         name: "Dr. Ionescu Elena",
-        department: "Neurology",
+        department: "Cardiology",
         rating: 4.7,
         reviewsNb: 95,
-        clinic: "Clinica Sanador",
+        clinic: "Hyperclinica Iasi",
         intervals: [
           { start: "08:00:00", end: "08:30:00" },
           { start: "08:30:00", end: "09:00:00" },
@@ -45,10 +45,10 @@ const medicIntervals = [
     medics: [
       {
         name: "Dr. Achitei Marius Dumitru",
-        department: "Dermatology",
+        department: "Cardiology",
         rating: 4.25,
         reviewsNb: 100,
-        clinic: "Clinica Regina Maria",
+        clinic: "Hyperclinica Iasi",
         intervals: [
           { start: "08:00:00", end: "08:30:00" },
           { start: "08:30:00", end: "09:00:00" },
@@ -60,7 +60,7 @@ const medicIntervals = [
         department: "Cardiology",
         rating: 4.5,
         reviewsNb: 120,
-        clinic: "Clinica MedLife",
+        clinic: "Hyperclinica Iasi",
         intervals: [
           { start: "08:00:00", end: "08:30:00" },
           { start: "08:30:00", end: "09:00:00" },
@@ -69,10 +69,10 @@ const medicIntervals = [
       },
       {
         name: "Dr. Ionescu Elena",
-        department: "Neurology",
+        department: "Cardiology",
         rating: 4.7,
         reviewsNb: 95,
-        clinic: "Clinica Sanador",
+        clinic: "Hyperclinica Iasi",
         intervals: [
           { start: "08:00:00", end: "08:30:00" },
           { start: "08:30:00", end: "09:00:00" },
@@ -86,10 +86,10 @@ const medicIntervals = [
     medics: [
       {
         name: "Dr. Achitei Marius Dumitru",
-        department: "Dermatology",
+        department: "Cardiology",
         rating: 4.25,
         reviewsNb: 100,
-        clinic: "Clinica Regina Maria",
+        clinic: "Hyperclinica Iasi",
         intervals: [
           { start: "08:00:00", end: "08:30:00" },
           { start: "08:30:00", end: "09:00:00" },
@@ -110,7 +110,7 @@ const medicIntervals = [
       },
       {
         name: "Dr. Ionescu Elena",
-        department: "Neurology",
+        department: "Cardiology",
         rating: 4.7,
         reviewsNb: 95,
         clinic: "Clinica Sanador",
@@ -127,7 +127,7 @@ const medicIntervals = [
     medics: [
       {
         name: "Dr. Achitei Marius Dumitru",
-        department: "Dermatology",
+        department: "Cardiology",
         rating: 4.25,
         reviewsNb: 100,
         clinic: "Clinica Regina Maria",
