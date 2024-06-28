@@ -18,7 +18,7 @@ const isTheCurrentRoute = (routePath) => {
 };
 
 function SidebarContent() {
-  const { user } = useContext(UserContext);
+  const { user, roles } = useContext(UserContext);
   return (
     <div className="py-4 text-gray-500 dark:text-gray-400">
       <a
@@ -31,7 +31,10 @@ function SidebarContent() {
       </a>
       <ul className="mt-6">
         {routes
-          .filter((route) => route.public || route.roles.includes(user?.role))
+          .filter(
+            (route) =>
+              route.public || route.roles.some((role) => roles.includes(role)),
+          )
           .map((route) =>
             route.routes ? (
               <SidebarSubmenu route={route} key={route.name} />

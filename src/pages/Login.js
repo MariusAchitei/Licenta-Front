@@ -4,23 +4,24 @@ import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { Label, Input, Button } from "@windmill/react-ui";
 import Logo from "components/Logo";
 import { UserContext } from "contexts/UserContext";
+import { useError } from "contexts/ErrorConntext";
 
 import ImageLight from "../assets/img/login.jpg";
 import ImageDark from "../assets/img/login.jpg";
 
 function Login() {
-  const { login } = useContext(UserContext); // Get the login function from UserContext
+  const { login } = useContext(UserContext);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { addError } = useError();
 
-  const handleLogin = () => {
-    const isAuthenticated = login(email, password);
+  const handleLogin = async () => {
+    const isAuthenticated = await login(email, password);
     if (isAuthenticated) {
-      navigate("/");
+      navigate("/app/home");
     } else {
-      setError("Invalid email or password");
+      addError("Invalid email or password");
     }
   };
 
@@ -50,7 +51,6 @@ function Login() {
               <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
                 Login
               </h1>
-              {error && <p className="mb-4 text-red-600">{error}</p>}
               <Label>
                 <span>Email</span>
                 <Input

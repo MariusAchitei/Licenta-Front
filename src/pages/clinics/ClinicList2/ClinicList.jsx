@@ -8,7 +8,8 @@ import EditClinicModal from "./EditClinicModal";
 
 export default function ClinicList() {
   const [isModalOpen, setModalOpen] = useState(false);
-  const { user } = useContext(UserContext);
+  const { user, roles } = useContext(UserContext);
+  console.log(user, roles);
   const [county, setCounty] = useState("");
   const [search, setSearch] = useState("");
 

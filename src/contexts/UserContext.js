@@ -1,82 +1,49 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
-import LoadingScreen from "pages/Loading";
-// Create the UserContext
+import React, { createContext, useState } from "react";
+import UserPool from "utils/UserPool";
+import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
+import { jwtDecode } from "jwt-decode";
+
 export const UserContext = createContext();
 
-// Custom hook to use the UserContext
-// export const useUser = () => useContext(UserContext);
-
-// Mock users
-const mockUsers = [
-  {
-    email: "user@example.com",
-    password: "user123",
-    role: "user",
-    id: 1,
-    name: "John Doe",
-  },
-  {
-    email: "medic@example.com",
-    password: "medic123",
-    role: "medic",
-    id: 2,
-    name: "Dr. Jane Smith",
-  },
-  {
-    email: "admin@example.com",
-    password: "admin123",
-    role: "admin",
-    id: 3,
-    name: "Admin User",
-  },
-];
-
-// UserProvider component to wrap around the app
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Simulate fetching user data
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    if (userData) {
-      console.log("Am gasit user in local storage");
-      setUser(userData);
-    }
-    setLoading(false);
-  }, []);
+  const [roles, setRoles] = useState([]);
 
   const login = (email, password) => {
-    const authenticatedUser = mockUsers.find(
-      (u) => u.email === email && u.password === password,
-    );
-    console.log(`the authenticated user is\n ${authenticatedUser}`);
-    if (authenticatedUser) {
-      console.log("AM SETAT USER");
-      setUser(authenticatedUser);
-      localStorage.setItem("user", JSON.stringify(authenticatedUser));
-      return true;
-    } else {
-      return false;
-    }
+    const user = new CognitoUser({ Username: email, Pool: UserPool });
+    const authDetails = new AuthenticationDetails({
+      Username: email,
+      Password: password,
+    });
+
+    return new Promise((resolve, reject) => {
+      user.authenticateUser(authDetails, {
+        onSuccess: async (data) => {
+          console.log("Authentication success:", data);
+          setUser(data);
+          try {
+            const token = data.getIdToken().getJwtToken();
+            const decodedToken = jwtDecode(token);
+            const roles = decodedToken["cognito:groups"] || [];
+            console.log("Roles:", roles);
+            setRoles(roles);
+            resolve(true);
+          } catch (err) {
+            console.error("Error decoding token:", err);
+            resolve(false);
+          }
+        },
+        onFailure: (err) => {
+          console.error("Authentication error:", err);
+          resolve(false);
+        },
+      });
+    });
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-  };
-
-  return loading ? (
-    LoadingScreen
-  ) : (
-    <UserContext.Provider value={{ user, login, logout }}>
+  return (
+    <UserContext.Provider value={{ user, roles, login }}>
       {children}
     </UserContext.Provider>
   );
-
-  // return (
-  //   <UserContext.Provider value={{ user, login, logout }}>
-  //     {loading ? <div>Loading...</div> : children}
-  //   </UserContext.Provider>
-  // );
 };
