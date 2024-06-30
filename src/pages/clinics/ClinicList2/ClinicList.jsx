@@ -9,6 +9,7 @@ import EditClinicModal from "./EditClinicModal";
 export default function ClinicList() {
   const [isModalOpen, setModalOpen] = useState(false);
   const { user, roles } = useContext(UserContext);
+  console.log("CACACACACALCALCALCLAL");
   console.log(user, roles);
   const [county, setCounty] = useState("");
   const [search, setSearch] = useState("");
@@ -53,7 +54,7 @@ export default function ClinicList() {
           .map((clinic) => (
             <ClinicCard
               key={clinic.name}
-              isAdmin={user?.role == "admin"}
+              isAdmin={roles.includes("admin")}
               clinic={clinic}
             />
           ))}

@@ -6,6 +6,7 @@ import { FaPlus, FaTrash, FaMapMarkerAlt } from "react-icons/fa";
 import "leaflet/dist/leaflet.css";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import FilesGallery from "components/FileGallery";
+import ReactQuill from "react-quill";
 
 const mockClinicData = {
   name: "Hyperclinica Iasi",
@@ -173,27 +174,45 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 space-y-3">
             <label className="block text-sm font-medium text-gray-700">
-              Hours
+              Schedule
             </label>
-            <input
-              type="text"
-              name="hours"
-              value={formData?.hours}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
+            <div className="space-x-3">
+              <input
+                id="bordered-checkbox-1"
+                type="checkbox"
+                value=""
+                name="bordered-checkbox"
+                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+              ></input>
+              <label htmlFor="Week days">Week days</label>
+            </div>
+            <div className="space-x-3">
+              <input
+                id="bordered-checkbox-1"
+                type="checkbox"
+                value=""
+                name="bordered-checkbox"
+                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+              ></input>
+              <label htmlFor="include-weekends">Include weekends</label>
+            </div>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Description
             </label>
+            {/* <ReactQuill
+              className="h-[70%]"
+              value={formData?.description}
+              onChange={handleChange}
+            /> */}
             <textarea
               name="description"
               value={formData?.description}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 block h-48 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </div>
           <div className="mb-4">
@@ -236,28 +255,10 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             <label className="block text-sm font-medium text-gray-700">
               Gallery
             </label>
-            <FilesGallery files={formData?.gallery} onFileUpload={() => {}}>
-              {/* {formData?.gallery?.map((url, index) => (
-                <div key={index} className="mb-2 flex items-center">
-                  <input
-                    type="text"
-                    value={url}
-                    onChange={(e) => handleArrayChange(e, index, "gallery")}
-                    className="mr-2 flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
-                  <Button
-                    layout="link"
-                    onClick={() => handleRemoveItem("gallery", index)}
-                  >
-                    <FaTrash className="text-red-500" />
-                  </Button>
-                </div>
-              ))} */}
-            </FilesGallery>
-            {/* <Button layout="link" onClick={() => handleAddItem("gallery")}>
-              <FaPlus className="text-green-500" />
-              Add Image
-            </Button> */}
+            <FilesGallery
+              files={formData?.gallery}
+              onFileUpload={() => {}}
+            ></FilesGallery>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
@@ -265,6 +266,7 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             </label>
             <div className="mb-2 flex items-center">
               <input
+                // id="Week days"
                 type="number"
                 name="lat"
                 value={formData?.coordinates?.lat}
@@ -272,11 +274,12 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
                 className="mr-2 flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
               <input
+                id="include-weekends"
                 type="number"
                 name="lng"
                 value={formData?.coordinates?.lng}
                 onChange={(e) => handleChange(e)}
-                className="ml-2 flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="snb ml-2 flex-1 rounded-md border-gray-300  shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </div>
             <LoadScript googleMapsApiKey="AIzaSyC6qvAEkBdH88CSgYmIGMDYKdjJRhJXCm8">
