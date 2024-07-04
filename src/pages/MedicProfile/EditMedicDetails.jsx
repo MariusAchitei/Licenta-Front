@@ -7,8 +7,8 @@ const EditMedicDetails = ({ doctor, setDoctor }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     // setData({ ...data, [name]: value });
-    const prevData = { ...doctor.data };
-    setDoctor({ ...doctor, data: { ...prevData, [name]: value } });
+    const prevData = { ...doctor };
+    setDoctor({ ...doctor, [name]: value });
   };
 
   const handleSave = () => {
@@ -22,20 +22,21 @@ const EditMedicDetails = ({ doctor, setDoctor }) => {
       </h3>
       <div className="mt-4 space-y-4">
         <Label>
-          <span>Experience</span>
+          <span>University</span>
           <Input
             className="mt-1"
-            name="experience"
-            value={doctor?.data.experience}
+            name="university"
+            value={doctor.university}
             onChange={handleChange}
           />
         </Label>
         <Label>
-          <span>Studies</span>
+          <span>Employment date</span>
           <Input
             className="mt-1"
-            name="studies"
-            value={doctor?.data.studies}
+            type="date"
+            name="employmentDate"
+            value={doctor?.employmentDate}
             onChange={handleChange}
           />
         </Label>
@@ -44,14 +45,20 @@ const EditMedicDetails = ({ doctor, setDoctor }) => {
           <Input
             className="mt-1"
             type="date"
-            name="dateOfBirth"
-            value={doctor?.data.dateOfBirth}
+            name="birthDate"
+            value={doctor?.birthDate}
             onChange={handleChange}
           />
         </Label>
-        <Button className="mt-4" onClick={handleSave}>
-          Save
-        </Button>
+        <Label>
+          <span>Phone</span>
+          <Input
+            className="mt-1"
+            name="phone"
+            value={doctor.phone}
+            onChange={handleChange}
+          />
+        </Label>
       </div>
     </div>
   );

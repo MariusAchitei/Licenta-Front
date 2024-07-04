@@ -6,7 +6,7 @@ export default function ClinicInfo({ clinic }) {
       <div className="flex flex-col items-center md:flex-row">
         <div className="w-full overflow-hidden rounded-lg md:w-1/4">
           <img
-            src={clinic.image}
+            src={clinic.mainImage}
             alt={clinic.name}
             className="h-full w-full object-cover"
           />
@@ -15,9 +15,9 @@ export default function ClinicInfo({ clinic }) {
           <h2 className="text-2xl font-bold text-gray-900">{clinic.name}</h2>
           <p className=" text-gray-600">{clinic.address}</p>
           <p className=" text-gray-600">{clinic.hours}</p>
-          <a href={clinic.mapLink} className=" text-blue-500 hover:underline">
+          {/* <a href={clinic.mapLink} className=" text-blue-500 hover:underline">
             View on Google Maps
-          </a>
+          </a> */}
         </div>
       </div>
     </div>

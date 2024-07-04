@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { Button } from "@windmill/react-ui";
 import Select from "react-select";
+import { useError } from "contexts/ErrorConntext";
+import axios from "axios";
+import axiosInstance from "utils/axiosInstance";
 
 const CreateMedicModal = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -12,14 +15,32 @@ const CreateMedicModal = ({ isOpen, onClose, onSave }) => {
   });
   const [searchName, setSearchName] = useState("");
   const [searchAddress, setSearchAddress] = useState("");
+  const { addError } = useError();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleClinicSelect = (selectedClinic) => {
-    setFormData({ ...formData, clinic: selectedClinic });
+  const handleClinicSelect = (e) => {
+    console.log("fadskjbfiudsbfiodsnf;odsmflk sdlvk ng lkdsdsngds");
+    console.log(e.target.value);
+    console.log(e);
+    setFormData({ ...formData, clinicId: e.target.value });
+  };
+
+  const handleSave = () => {
+    console.log("Creating medic: ", formData);
+    axiosInstance
+      .post("/admin/medics", formData)
+      .then((response) => {
+        onSave(response.data);
+        onClose();
+      })
+      .catch((error) => {
+        console.error("Error creating medic: ", error);
+        addError("Error creating medic");
+      });
   };
 
   const customOptionRenderer = (option) => (
@@ -37,26 +58,23 @@ const CreateMedicModal = ({ isOpen, onClose, onSave }) => {
   );
 
   // Mock clinic options for demonstration purposes
-  const clinicOptions = [
-    {
-      id: 1,
-      name: "Clinic A",
-      address: "123 Street, City",
-      logo: "https://via.placeholder.com/50",
-    },
-    {
-      id: 2,
-      name: "Clinic B",
-      address: "456 Avenue, City",
-      logo: "https://via.placeholder.com/50",
-    },
-  ];
+  const [clinicOptions, setClinicOptions] = useState();
 
-  const filteredClinicOptions = clinicOptions.filter(
-    (clinic) =>
-      clinic.name.toLowerCase().includes(searchName.toLowerCase()) &&
-      clinic.address.toLowerCase().includes(searchAddress.toLowerCase()),
-  );
+  useEffect(() => {
+    // Fetch clinic options from API
+    console.log("Fetching clinics");
+    axios
+      .get("http://localhost:8080/api/public/clinics")
+      .then((response) => {
+        setClinicOptions(response.data);
+        console.log("Clinics: ", response.data);
+        console.log(clinicOptions.length);
+      })
+      .catch((error) => {
+        console.error("Error fetching clinics: ", error);
+        addError("Error fetching clinics");
+      });
+  }, []);
 
   return (
     <Modal
@@ -133,20 +151,49 @@ const CreateMedicModal = ({ isOpen, onClose, onSave }) => {
             <label className="block text-sm font-medium text-gray-700">
               Select Clinic
             </label>
-            <Select
-              options={filteredClinicOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
+            <select
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-5"
+              value={formData.clinic}
               onChange={handleClinicSelect}
-              formatOptionLabel={customOptionRenderer}
-              className="mt-2"
-            />
+            >
+              <option disabled selected value="">
+                Select Clinic
+              </option>
+              {clinicOptions
+                ?.filter((clinic) => {
+                  console.log("Clinic: ", clinic);
+                  console.log("Search Name: ", searchName);
+                  console.log("Search Address: ", searchAddress);
+                  return (
+                    !searchName ||
+                    (clinic.name
+                      .toLowerCase()
+                      .includes(searchName.toLowerCase()) &&
+                      (searchAddress ||
+                        clinic.address
+                          .toLowerCase()
+                          .includes(searchAddress.toLowerCase()) ||
+                        clinic.county
+                          .toLowerCase()
+                          .includes(searchAddress.toLowerCase()) ||
+                        clinic.city
+                          .toLowerCase()
+                          .includes(searchAddress.toLowerCase())))
+                  );
+                })
+                .map((clinic) => (
+                  <option key={clinic.id} value={clinic.id} className="h-10">
+                    {clinic.name} - {clinic.county} - {clinic.city} -{" "}
+                    {clinic.address}
+                  </option>
+                ))}
+            </select>
           </div>
           <div className="mt-6 flex justify-end">
             <Button layout="outline" onClick={onClose}>
               Close
             </Button>
-            <Button className="ml-4" onClick={() => onSave(formData)}>
+            <Button className="ml-4" onClick={handleSave}>
               Save
             </Button>
           </div>

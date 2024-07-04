@@ -1,15 +1,24 @@
 import React from "react";
 
-const ServiceCard = ({ service, isSelected, onSelect }) => {
+const ServiceCard = ({ service, isSelected, setFormData }) => {
+  const onSelect = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      medicalServiceId: service.id,
+    }));
+  };
   return (
     <div
       onClick={onSelect}
-      className="p-4 rounded-lg shadow-lg cursor-pointer flex items-start justify-between"
+      className="flex cursor-pointer items-start justify-between rounded-lg p-4 shadow-lg"
     >
+      <div className="size-20">
+        <img src={service.photoLocation} alt={service.name} />
+      </div>
       <div>
-        <h3 className="text-lg font-bold mb-2">{service.label}</h3>
+        <h3 className="mb-2 text-lg font-bold">{service.name}</h3>
         <p className="text-sm ">{service.description}</p>
-        <p className="text-sm  mt-2">
+        <p className="mt-2  text-sm">
           <strong>Duration:</strong> {service.duration}
         </p>
       </div>

@@ -18,12 +18,17 @@ import {
   DropdownItem,
   WindmillContext,
 } from "@windmill/react-ui";
+import { FaKey } from "react-icons/fa";
+import { IoIosLogIn } from "react-icons/io";
+
 import profilePhoto from "assets/photos/profile.png";
 import loginPhoto from "assets/login.png";
+import { UserContext } from "contexts/UserContext";
 
 function Header() {
   const { mode, toggleMode } = useContext(WindmillContext);
   const { toggleSidebar } = useContext(SidebarContext);
+  const { user, logout } = useContext(UserContext);
 
   const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -110,45 +115,57 @@ function Header() {
             </Dropdown>
           </li>
           {/* <!-- Profile menu --> */}
-          <li className="relative">
-            <button
-              className="focus:shadow-outline-purple rounded-full focus:outline-none"
-              onClick={handleProfileClick}
-              aria-label="Account"
-              aria-haspopup="true"
-            >
-              <Avatar
-                className="align-middle"
-                src={loginPhoto}
-                alt=""
-                aria-hidden="true"
-              />
-            </button>
-            <Dropdown
-              align="right"
-              isOpen={isProfileMenuOpen}
-              onClose={() => setIsProfileMenuOpen(false)}
-            >
-              <DropdownItem tag="a" href="/app/profile">
-                <OutlinePersonIcon
-                  className="mr-3 h-4 w-4"
+          {user && (
+            <li className="relative">
+              <button
+                className="focus:shadow-outline-purple rounded-full focus:outline-none"
+                onClick={handleProfileClick}
+                aria-label="Account"
+                aria-haspopup="true"
+              >
+                <Avatar
+                  className="align-middle"
+                  src={loginPhoto}
+                  alt=""
                   aria-hidden="true"
                 />
-                <span>Profile</span>
-              </DropdownItem>
-              <DropdownItem tag="a" href="#">
-                <OutlineCogIcon className="mr-3 h-4 w-4" aria-hidden="true" />
-                <span>Settings</span>
-              </DropdownItem>
-              <DropdownItem onClick={() => alert("Log out!")}>
-                <OutlineLogoutIcon
-                  className="mr-3 h-4 w-4"
-                  aria-hidden="true"
-                />
-                <span>Log out</span>
-              </DropdownItem>
-            </Dropdown>
-          </li>
+              </button>
+              <Dropdown
+                align="right"
+                isOpen={isProfileMenuOpen}
+                onClose={() => setIsProfileMenuOpen(false)}
+              >
+                <DropdownItem tag="a" href="/app/profile">
+                  <OutlinePersonIcon
+                    className="mr-3 h-4 w-4"
+                    aria-hidden="true"
+                  />
+                  <span>Profile</span>
+                </DropdownItem>
+                <DropdownItem tag="a" href="#">
+                  <OutlineCogIcon className="mr-3 h-4 w-4" aria-hidden="true" />
+                  <span>Settings</span>
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    logout();
+                    window.location.href = "/login";
+                  }}
+                >
+                  <OutlineLogoutIcon
+                    className="mr-3 h-4 w-4"
+                    aria-hidden="true"
+                  />
+                  <span>Log out</span>
+                </DropdownItem>
+              </Dropdown>
+            </li>
+          )}
+          {!user && (
+            <a href="/login">
+              <IoIosLogIn className="size-6" />
+            </a>
+          )}
         </ul>
       </div>
     </header>

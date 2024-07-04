@@ -35,17 +35,25 @@ const steps = ["Step 1", "Step 2", "Step 3"];
 
 const AppointmentForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [formData, setFormData] = useState({
+    reason: "",
+    departmentId: "",
+    serviceId: "",
+    countyId: "",
+    cityId: "",
+    medicId: "",
+  });
 
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <Step1 />;
+        return <Step1 formData={formData} setFormData={setFormData} />;
       case 1:
-        return <Step2 />;
+        return <Step2 formData={formData} setFormData={setFormData} />;
       case 2:
-        return <Step3 />;
+        return <Step3 formData={formData} setFormData={setFormData} />;
       default:
-        return <Step1 />;
+        return <Step1 formData={formData} setFormData={setFormData} />;
     }
   };
 

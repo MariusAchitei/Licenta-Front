@@ -49,6 +49,20 @@ const routes = [
     roles: ["medic"], // accessible to medics only
     public: false, // accessible only after login
   },
+  {
+    path: "/app/departments",
+    icon: "ClinicIcon",
+    name: "Departments",
+    roles: ["admin"],
+    public: false,
+  },
+  {
+    path: "/app/medical-services",
+    icon: "ClinicIcon",
+    name: "Medical Services",
+    roles: ["admin"],
+    public: false,
+  },
 ];
 
 export default routes;

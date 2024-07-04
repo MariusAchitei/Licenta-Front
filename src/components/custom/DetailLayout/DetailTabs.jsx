@@ -4,7 +4,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DetailTabs({ tabs, data, props = {} }) {
+export default function DetailTabs({
+  tabs,
+  data,
+  props = {},
+  setDoctor,
+  doctor,
+}) {
   const [currentTab, setCurrentTab] = useState("Overview");
 
   const CurrentComponent =
@@ -34,7 +40,7 @@ export default function DetailTabs({ tabs, data, props = {} }) {
       </div>
 
       <div className="mt-6 rounded-lg bg-white p-6 shadow-md">
-        <CurrentComponent data={data} />
+        <CurrentComponent data={data} setDoctor={setDoctor} doctor={doctor} />
       </div>
     </>
   );

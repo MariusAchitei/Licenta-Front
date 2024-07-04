@@ -15,7 +15,7 @@ export default function ClinicMap({ data }) {
   const [location, setLocation] = useState(null);
   const [selectedClinic, setSelectedClinic] = useState(null);
   const clinic = data;
-
+  console.log("Clinic: ", clinic);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyC6qvAEkBdH88CSgYmIGMDYKdjJRhJXCm8",
   });
@@ -24,9 +24,9 @@ export default function ClinicMap({ data }) {
   const onLoad = React.useCallback(
     function callback(map) {
       mapRef.current = map;
-      if (clinic && clinic.coordinates) {
-        map.panTo(clinic.coordinates);
-        setLocation(clinic.coordinates);
+      if (clinic && clinic.longitude && clinic.latitude) {
+        map.panTo({ lat: clinic.latitude, lng: clinic.longitude });
+        setLocation({ lat: clinic.latitude, lng: clinic.longitude });
       }
     },
     [clinic],
@@ -37,10 +37,10 @@ export default function ClinicMap({ data }) {
       navigator.geolocation.getCurrentPosition(
         ({ coords }) => {
           if (!location) {
-            setLocation({ lat: coords.latitude, lng: coords.longitude });
+            setLocation({ lat: coords.longitude, lng: coords.latitude });
             mapRef.current?.panTo({
-              lat: coords.latitude,
-              lng: coords.longitude,
+              lat: coords.longitude,
+              lng: coords.latitude,
             });
           }
         },
@@ -60,7 +60,7 @@ export default function ClinicMap({ data }) {
         onLoad={onLoad}
       >
         <Marker
-          position={clinic.coordinates}
+          position={{ lat: clinic.latitude, lng: clinic.longitude }}
           onClick={() => setSelectedClinic(clinic)}
         />
 

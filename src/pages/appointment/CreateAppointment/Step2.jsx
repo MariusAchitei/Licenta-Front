@@ -1,46 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Select, Card } from "flowbite-react";
-import romanianCounties from "db/counties";
-import romanianClinics from "db/clinics";
-import romanianMedics from "db/romanianMedics";
+import axiosInstance from "utils/axiosInstance";
+const axios = axiosInstance;
 
-const Step2 = () => {
-  const [selectedCounty, setSelectedCounty] = useState("");
-  const [selectedClinic, setSelectedClinic] = useState("");
-  const [clinicOptions, setClinicOptions] = useState([]);
-  const [selectedMedic, setSelectedMedic] = useState("");
-  const [medicOptions, setMedicOptions] = useState([]);
+const Step2 = ({ formData, setFormData }) => {
+  const [counties, setCounties] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [clinics, setClinics] = useState([]);
+  const [medics, setMedics] = useState([]);
 
-  const handleCountyChange = (event) => {
-    console.log(event.target.value);
-    console.log(romanianCounties);
-    console.log(romanianClinics);
+  useEffect(() => {
+    const fetchCounties = async () => {
+      try {
+        const response = await axios.get("/public/counties");
+        setCounties(response.data);
+      } catch (error) {
+        console.error("Error fetching counties:", error);
+      }
+    };
+    fetchCounties();
+  }, []);
+
+  const handleCountyChange = async (event) => {
     const countyId = event.target.value;
-    setSelectedCounty(countyId);
-    setSelectedClinic("");
-    setSelectedMedic("");
-    const selectedCounty = romanianCounties.find(
-      (county) => county.id === countyId,
-    );
-    setClinicOptions(
-      romanianClinics.filter(
-        (clinic) => clinic.countyId == event.target.value,
-      )[0].clinics,
-    );
+    setFormData((prevData) => ({
+      ...prevData,
+      countyId,
+      cityId: "",
+      clinicId: "",
+      medicId: "",
+    }));
+    setCities([]);
+    setClinics([]);
+    setMedics([]);
+
+    try {
+      const response = await axios.get(`/public/cities/${countyId}`);
+      setCities(response.data);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
   };
 
-  const handleClinicChange = (event) => {
+  const handleCityChange = async (event) => {
+    const cityId = event.target.value;
+    setFormData((prevData) => ({
+      ...prevData,
+      cityId,
+      clinicId: "",
+      medicId: "",
+    }));
+    setClinics([]);
+    setMedics([]);
+
+    try {
+      const response = await axios.get(`/public/clinics?cityId=${cityId}`);
+      setClinics(response.data);
+    } catch (error) {
+      console.error("Error fetching clinics:", error);
+    }
+  };
+
+  const handleClinicChange = async (event) => {
     const clinicId = event.target.value;
-    setSelectedClinic(clinicId);
-    setSelectedMedic("");
-    const medics = romanianMedics.filter(
-      (medic) => medic.clinicId === clinicId,
-    );
-    setMedicOptions(medics);
+    setFormData((prevData) => ({
+      ...prevData,
+      clinicId,
+      medicId: "",
+    }));
+    setMedics([]);
+
+    try {
+      const response = await axios.get(
+        `/public/form/medics?clinicId=${clinicId}`,
+      );
+      setMedics(response.data);
+    } catch (error) {
+      console.error("Error fetching medics:", error);
+    }
   };
 
   const handleMedicChange = (event) => {
-    setSelectedMedic(event.target.value);
+    console.log("medics", medics);
+    const medicId = event.target.value;
+    setFormData((prevData) => ({
+      ...prevData,
+      medicId,
+    }));
   };
 
   return (
@@ -49,15 +95,32 @@ const Step2 = () => {
         <div className="mb-4">
           <Select
             onChange={handleCountyChange}
-            value={selectedCounty}
+            value={formData.countyId}
             className="w-full"
           >
             <option value="" disabled>
               Select County
             </option>
-            {romanianCounties.map((county) => (
+            {counties.map((county) => (
               <option key={county.id} value={county.id}>
-                {county.label}
+                {county.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <div className="mb-4">
+          <Select
+            onChange={handleCityChange}
+            value={formData.cityId}
+            className="w-full"
+            disabled={!formData.countyId}
+          >
+            <option value="" disabled>
+              Select City
+            </option>
+            {cities.map((city) => (
+              <option key={city.id} value={city.id}>
+                {city.name}
               </option>
             ))}
           </Select>
@@ -65,15 +128,16 @@ const Step2 = () => {
         <div className="mb-4">
           <Select
             onChange={handleClinicChange}
-            value={selectedClinic}
+            value={formData.clinicId}
             className="w-full"
+            disabled={!formData.cityId}
           >
             <option value="" disabled>
               Select Clinic
             </option>
-            {clinicOptions.map((clinic) => (
+            {clinics.map((clinic) => (
               <option key={clinic.id} value={clinic.id}>
-                {clinic.label}
+                {clinic.name}
               </option>
             ))}
           </Select>
@@ -81,15 +145,16 @@ const Step2 = () => {
         <div className="mb-4">
           <Select
             onChange={handleMedicChange}
-            value={selectedMedic}
+            value={formData.medicId}
             className="w-full"
+            disabled={!formData.clinicId}
           >
             <option value="" disabled>
               Select Medic
             </option>
-            {medicOptions.map((medic) => (
+            {medics.map((medic) => (
               <option key={medic.id} value={medic.id}>
-                {medic.label}
+                {medic.professionalTitle} {medic.firstName} {medic.lastName}
               </option>
             ))}
           </Select>

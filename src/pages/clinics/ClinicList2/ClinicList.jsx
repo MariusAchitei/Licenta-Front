@@ -1,24 +1,50 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import ClinicCard from "./ClinicCard";
 import { UserContext } from "contexts/UserContext";
+import { useError } from "contexts/ErrorConntext";
 
 import clinics from "./clinics.js";
 import { Button } from "@windmill/react-ui";
 import EditClinicModal from "./EditClinicModal";
+import axios from "axios";
+import LoadingScreen from "pages/Loading";
 
 export default function ClinicList() {
+  const { addError } = useError();
+  const [clinics, setClinics] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const { user, roles } = useContext(UserContext);
   console.log("CACACACACALCALCALCLAL");
   console.log(user, roles);
   const [county, setCounty] = useState("");
   const [search, setSearch] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    console.log("http://localhost:8080/api" + "/public/clinics");
+    axios
+      .get("http://localhost:8080/api" + "/public/clinics")
+      .then((response) => {
+        setClinics(response.data);
+        setIsLoaded(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching clinics: ", error);
+        addError("Error fetching clinics");
+        setIsLoaded(true);
+      });
+  }, []);
 
   const handleAddClinic = () => {
     setModalOpen(true);
   };
 
   const handleSave = (clinic) => {};
+
+  if (!isLoaded || !clinics) {
+    return <LoadingScreen />;
+  } else {
+    console.log("Clinics: ", clinics);
+  }
 
   return (
     <div className="mx-auto max-w-[80vw] py-6">
@@ -40,18 +66,19 @@ export default function ClinicList() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        {user?.role == "admin" && (
+        {roles.includes("admin") && (
           <Button onClick={handleAddClinic}>Create</Button>
         )}
       </div>
       <div className="space-y-6">
         {clinics
-          .filter(
-            (clinic) =>
-              clinic.name.toLowerCase().includes(search.toLowerCase()) &&
-              (!county || clinic.county === county),
-          )
+          // .filter(
+          //   (clinic) =>
+          //     clinic.name.toLowerCase().includes(search.toLowerCase()) &&
+          //     (!county || clinic.county === county),
+          // )
           .map((clinic) => (
+            // <div>{clinic.name}</div>
             <ClinicCard
               key={clinic.name}
               isAdmin={roles.includes("admin")}

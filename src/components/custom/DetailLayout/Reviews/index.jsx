@@ -1,15 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import RatingBars from "../../../../pages/medics/MedicDetail/RatingBars";
-import { FaStar, FaCheckCircle } from "react-icons/fa";
+import { FaStar, FaCheckCircle, FaRegStar } from "react-icons/fa";
 import AddReview from "./AddReview";
+import LoadingScreen from "pages/Loading";
+import axiosInstance from "utils/axiosInstance";
+import axios from "axios";
+import { UserContext } from "contexts/UserContext";
+import { useError } from "contexts/ErrorConntext";
 
 export default function Reviews({ data, checkPermission = true }) {
-  const { reviews, rating } = data;
+  const [reviews, setReviews] = useState([]);
+  const { rating, id } = data;
+  const { user } = useContext(UserContext);
+  const { addError } = useError();
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/public/clinics/reviews`, null, {
+        params: { clinicId: id },
+      })
+      .then((response) => {
+        setReviews(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching reviews: ", error);
+      });
+  }, []);
+
   // const [cal, setcal] = useState(null);
-  // const [showAddReview, setShowAddReview] = useState(false);
+  const [showAddReview, setShowAddReview] = useState(false);
+
+  const handleDisplayAddReview = () => {
+    if (!user) {
+      addError("You must be logged in to add a review");
+      return;
+    }
+    axiosInstance
+      .get("/reviews/check/" + id)
+      .then((response) => {
+        console.log(response.data);
+        setShowAddReview(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching reviews: ", error);
+        addError("Error fetching reviews");
+      });
+  };
 
   const handleAddReview = (review) => {
     // Logic to add the review to the reviews list
+
     data.reviews.push({
       name: "New User", // This should be replaced with actual user data
       date: new Date().toLocaleString(),
@@ -18,33 +58,47 @@ export default function Reviews({ data, checkPermission = true }) {
       verifiedPurchase: true, // This should be dynamically determined
       helpful: { yes: 0, no: 0 },
     });
-    // setShowAddReview(false);
+    setShowAddReview(false);
   };
-  return <></>;
+  // return <></>;
+
+  if (!reviews) return <LoadingScreen />;
+
   return (
     <div className="rounded-lg bg-white p-6 shadow-md">
-      <h2 className="text-2xl font-bold text-gray-900">Recenzii</h2>
+      <h2 className="text-2xl font-bold text-gray-900">Reviews</h2>
       <div className="mb-6 flex flex-col space-x-10 lg:flex-row">
         <div className="flex-2 mt-2 flex flex-col items-center">
-          <span className="text-4xl font-bold text-yellow-300">
-            {rating.score.toFixed(2)}
-          </span>
-          <span className="ml-2 text-xl text-gray-600">of 5</span>
+          {rating && (
+            <>
+              <span className="text-4xl font-bold text-yellow-300">
+                {rating?.toFixed(2)}
+              </span>
+              <span className="ml-2 text-xl text-gray-600">of 5</span>
+            </>
+          )}
           <span className="ml-4 flex items-center">
-            {[...Array(5)].map((_, i) => (
-              <FaStar key={i} className="h-5 w-5 text-yellow-300" />
-            ))}
+            <div className="flex items-center">
+              {[...Array(rating || 0)].map((_, i) => (
+                <FaStar key={i} className="text-yellow-500" />
+              ))}
+              {[...Array(5 - rating || 0)].map((_, i) => (
+                <FaRegStar key={i} className="text-yellow-500" />
+              ))}
+            </div>
           </span>
           <span className="ml-2 text-gray-600">({reviews.length} ratings)</span>
           <button
             className="mt-4 rounded-lg bg-yellow-300 px-4 py-2 text-white"
-            // onClick={() => setShowAddReview(!showAddReview)}
+            onClick={() => {
+              handleDisplayAddReview();
+            }}
           >
             Add your feedback
           </button>
         </div>
         <div className="max-w-[50vw] flex-1">
-          <RatingBars />
+          <RatingBars reviews={reviews || []} />
         </div>
       </div>
 
@@ -68,7 +122,7 @@ export default function Reviews({ data, checkPermission = true }) {
           </select>
         </div>
       </div>
-      {true && (
+      {showAddReview && (
         <AddReview
           onSubmit={handleAddReview}
           checkPermission={checkPermission}

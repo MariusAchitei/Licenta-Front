@@ -1,32 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Select, TextInput, Card } from "flowbite-react";
 import medicalDepartments from "db/medicalDepartments";
 import ServiceCard from "components/custom/ServiceCard";
 import NoDataPlaceholder from "components/custom/NoDataPlaceholder";
+import axiosInstance from "utils/axiosInstance";
 
-const Step1 = () => {
-  const [department, setDepartment] = useState(medicalDepartments[0]);
+const Step1 = ({ formData, setFormData }) => {
+  const [department, setDepartment] = useState();
+  const [availableDepartments, setAvailableDepartments] = useState([]);
+  const [availableServices, setAvailableServices] = useState([]);
   const [search, setSearch] = useState("");
-  const [services, setServices] = useState(department.services);
+  const [services, setServices] = useState([]);
   const [reason, setReason] = useState("");
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const result = await axiosInstance.get("/public/departments");
+        setAvailableDepartments(result.data);
+        const resultServices = await axiosInstance.get(
+          "/public/medical-services",
+        );
+        setAvailableServices(resultServices.data);
+        setServices(resultServices.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchDepartments();
+  }, []);
 
   const handleReasonChange = (e) => {
     setReason(e.target.value);
+    setFormData({ ...formData, reason: e.target.value });
   };
 
   const handleDepartmentChange = (e) => {
+    console.log("TOTAL", availableServices);
+    console.log("DEPARTMENT", e.target.value);
+    // console.log()
     const selectedDepartment = medicalDepartments.find(
       (dep) => dep.id === e.target.value,
     );
     setDepartment(selectedDepartment);
-    setServices(selectedDepartment.services);
+    setServices(
+      availableServices.filter(
+        (service) => service.department.id == e.target.value,
+      ),
+    );
   };
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
-    const filteredServices = department.services.filter(
+    const filteredServices = availableServices.filter(
       (service) =>
-        service.label.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        service.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
         service.description
           .toLowerCase()
           .includes(e.target.value.toLowerCase()),
@@ -47,12 +75,15 @@ const Step1 = () => {
           <label htmlFor="">Department:</label>
           <Select
             onChange={handleDepartmentChange}
-            value={department.id}
+            value={department?.id}
             className="w-full"
           >
-            {medicalDepartments.map((dep) => (
+            <option value="" selected disabled>
+              Select a department
+            </option>
+            {availableDepartments?.map((dep) => (
               <option key={dep.id} value={dep.id}>
-                {dep.label}
+                {dep.name}
               </option>
             ))}
           </Select>
@@ -67,7 +98,11 @@ const Step1 = () => {
       <div className="mt-4">
         {services.length ? (
           services.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+            <ServiceCard
+              key={service.id}
+              service={service}
+              setFormData={setFormData}
+            />
           ))
         ) : (
           <NoDataPlaceholder />

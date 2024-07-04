@@ -1,11 +1,14 @@
 import React from "react";
 import { Button } from "@windmill/react-ui";
+import axiosAppointments from "utils/axiosAppointments";
+import { useError } from "contexts/ErrorConntext";
 
 function WorkingHoursCard({ workingHours, setWorkingHours }) {
+  const { addError } = useError();
   const handleTimeChange = (day, index, type, value) => {
     setWorkingHours((prev) => {
       const updatedHours = { ...prev };
-      updatedHours[day][index][type] = value;
+      updatedHours[day].workingHours[index][type] = value;
       return updatedHours;
     });
   };
@@ -13,7 +16,10 @@ function WorkingHoursCard({ workingHours, setWorkingHours }) {
   const handleAddTimeSlot = (day) => {
     setWorkingHours((prev) => {
       const updatedHours = { ...prev };
-      updatedHours[day].push({ start: "00:00:00", end: "00:00:00" });
+      updatedHours[day].workingHours.push({
+        start: "00:00:00",
+        end: "00:00:00",
+      });
       return updatedHours;
     });
   };
@@ -21,9 +27,31 @@ function WorkingHoursCard({ workingHours, setWorkingHours }) {
   const handleRemoveTimeSlot = (day, index) => {
     setWorkingHours((prev) => {
       const updatedHours = { ...prev };
-      updatedHours[day].splice(index, 1);
+      updatedHours[day].workingHours.splice(index, 1);
       return updatedHours;
     });
+  };
+
+  const handleSaveConfiguration = () => {
+    const newWorkingHours = {
+      monday: JSON.stringify(workingHours.monday),
+      tuesday: JSON.stringify(workingHours.tuesday),
+      wednesday: JSON.stringify(workingHours.wednesday),
+      thursday: JSON.stringify(workingHours.thursday),
+      friday: JSON.stringify(workingHours.friday),
+      saturday: JSON.stringify(workingHours.saturday),
+      sunday: JSON.stringify(workingHours.sunday),
+    };
+    axiosAppointments
+      .put("/work-plans/1000", newWorkingHours)
+      .then((response) => {
+        addError("Working hours saved successfully", "success");
+        console.log("Working hours saved:", response.data);
+      })
+      .catch((error) => {
+        addError("Error saving working hours", "error");
+        console.error("Error saving working hours:", error);
+      });
   };
 
   const renderTimeSlots = (day, times) => (
@@ -70,12 +98,15 @@ function WorkingHoursCard({ workingHours, setWorkingHours }) {
       <h3 className="text-lg font-medium leading-6 text-gray-900">
         Default Working Hours
       </h3>
+      <Button className="my-5" onClick={handleSaveConfiguration}>
+        Save configuration
+      </Button>
       <div className="flex flex-wrap space-x-5">
         {Object.entries(workingHours).map(([day, times]) => (
           <div key={day} className="mt-4 rounded-3xl bg-white p-5 shadow-2xl">
             <h4 className="font-medium capitalize text-gray-800">{day}</h4>
-            {times.length > 0 ? (
-              renderTimeSlots(day, times)
+            {times.workingHours?.length > 0 ? (
+              renderTimeSlots(day, times.workingHours)
             ) : (
               <Button onClick={() => handleAddTimeSlot(day)}>
                 Add Time Slot

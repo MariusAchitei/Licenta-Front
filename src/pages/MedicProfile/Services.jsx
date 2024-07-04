@@ -1,44 +1,64 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import axiosInstance from "utils/axiosInstance";
+import LoadingScreen from "pages/Loading";
 
 export default function Services({ doctor, setDoctor }) {
-  const handleServiceChange = (index, value) => {
-    const updatedServices = [...doctor.services];
-    updatedServices[index] = value;
-    setDoctor({ ...doctor, services: updatedServices });
+  const [availableServices, setAvailableServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [chosenServices, setChosenServices] = useState([]);
+
+  console.log("LA INITIALIZARE AM", setDoctor);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axiosInstance.get("/public/medical-services");
+        setAvailableServices(response.data);
+      } catch (error) {
+        console.error("Failed to fetch services", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchServices();
+  }, []);
+
+  useEffect(() => {
+    setChosenServices(
+      doctor?.medicalServicesIds?.map((id) => {
+        const service = availableServices.find((s) => s.id === id);
+        return { value: id, label: service ? service.name : id };
+      }) || [],
+    );
+  }, [doctor, availableServices]);
+
+  const handleServiceChange = (selectedOptions) => {
+    const selectedServices = selectedOptions.map((option) => option.value);
+    setChosenServices(selectedOptions);
+    console.log(setDoctor);
+    setDoctor({ ...doctor, medicalServicesIds: selectedServices });
   };
 
-  const handleAddService = () => {
-    setDoctor({ ...doctor, services: [...doctor.services, ""] });
-  };
+  if (loading) return <LoadingScreen />;
 
-  const handleRemoveService = (index) => {
-    const updatedServices = doctor.services.filter((_, i) => i !== index);
-    setDoctor({ ...doctor, services: updatedServices });
-  };
+  const serviceOptions = availableServices.map((service) => ({
+    value: service.id,
+    label: service.name,
+  }));
 
   return (
     <div className="mt-6">
       <h3 className="text-lg font-medium leading-6 text-gray-900">Services</h3>
       <div className="mt-2">
-        {doctor?.services?.map((service, index) => (
-          <div key={index} className="mb-2 flex items-center">
-            <input
-              type="text"
-              value={service}
-              onChange={(e) => handleServiceChange(index, e.target.value)}
-              className="mr-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-            <button
-              onClick={() => handleRemoveService(index)}
-              className="ml-2 text-red-600"
-            >
-              Remove
-            </button>
-          </div>
-        ))}
-        <button onClick={handleAddService} className="mt-2 text-blue-600">
-          Add Service
-        </button>
+        <Select
+          isMulti
+          value={chosenServices}
+          onChange={handleServiceChange}
+          options={serviceOptions}
+          className="basic-multi-select"
+          classNamePrefix="select"
+        />
       </div>
     </div>
   );

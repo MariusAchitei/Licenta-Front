@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import DoctorBio from "./DoctorBio";
 import Services from "./Services";
 import DoctorCard from "./DoctorCard";
 import DetailLayout from "components/custom/DetailLayout";
 import Clinic1 from "assets/images/clinics/1.png";
 import EditMedicDetails from "./EditMedicDetails";
-
+import axiosInstance from "utils/axiosInstance";
+import { UserContext } from "contexts/UserContext";
 const initialDoctor = {
   name: "Dr. Bogdan Bacanu",
   department: { id: 1, name: "Cardiology" },
@@ -44,7 +45,21 @@ const tabs = [
 ];
 
 export default function MedicProfile() {
-  const [doctor, setDoctor] = useState(initialDoctor);
+  const { getIdentity } = useContext(UserContext);
+  const [doctor, setDoctor] = useState({});
+  useEffect(async () => {
+    const medic = await getIdentity();
+    console.log(medic);
+    await axiosInstance(`/medics/profile/${medic.id}`)
+      .then((res) => {
+        console.log("Beleauaa ADEVARATA", res.data);
+        setDoctor(res.data);
+      })
+      .catch((err) => {
+        console.log("CPLM");
+        console.log(err);
+      });
+  }, []);
 
   return (
     <DetailLayout

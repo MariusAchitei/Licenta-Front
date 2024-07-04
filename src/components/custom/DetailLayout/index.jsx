@@ -5,7 +5,7 @@ export default function DetailLayout({
   tabs,
   cardComponent,
   data,
-  props = {},
+  props,
 }) {
   return (
     <div className="min-h-screen bg-gray-50 text-lg">
@@ -18,7 +18,12 @@ export default function DetailLayout({
       <main className="mx-auto max-w-[80vw] py-6">
         {cardComponent}
 
-        <DetailTabs tabs={tabs} data={data} />
+        <DetailTabs
+          tabs={tabs}
+          data={data}
+          doctor={props?.doctor}
+          setDoctor={props?.setDoctor}
+        />
       </main>
     </div>
   );

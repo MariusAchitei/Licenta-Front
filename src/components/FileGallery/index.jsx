@@ -8,7 +8,7 @@ import {
 import { useDropzone } from "react-dropzone";
 import { Button } from "@windmill/react-ui";
 
-const FilesGallery = ({ files, onFileUpload }) => {
+const FilesGallery = ({ files, onFileUpload, onFileRemove }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState(files);
   const [fileToDelete, setFileToDelete] = useState(null);
@@ -16,23 +16,33 @@ const FilesGallery = ({ files, onFileUpload }) => {
   const onDrop = (acceptedFiles) => {
     setIsUploading(true);
 
-    // Simulate a file upload process
-    setTimeout(() => {
-      const newFiles = acceptedFiles.map((file, index) => ({
-        id: uploadedFiles.length + index + 1,
-        name: file.name,
-        type: file.type.includes("pdf")
-          ? "pdf"
-          : file.type.includes("image")
-            ? "image"
-            : "text",
-      }));
+    const readFiles = acceptedFiles.map((file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve({
+            id: file.lastModified, // or another unique identifier
+            name: file.name,
+            type: file.type.includes("pdf")
+              ? "pdf"
+              : file.type.includes("image")
+                ? "image"
+                : "text",
+            file: file,
+          });
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(readFiles).then((newFiles) => {
       setUploadedFiles((prevFiles) => [...prevFiles, ...newFiles]);
       setIsUploading(false);
       if (onFileUpload) {
         onFileUpload(newFiles);
       }
-    }, 2000);
+    });
   };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
@@ -51,8 +61,12 @@ const FilesGallery = ({ files, onFileUpload }) => {
   };
 
   const handleDelete = (file) => {
+    const indexToDelete = uploadedFiles.findIndex((f) => f.id === file.id);
     setUploadedFiles(uploadedFiles.filter((f) => f.id !== file.id));
     setFileToDelete(null);
+    if (onFileRemove) {
+      onFileRemove(indexToDelete);
+    }
   };
 
   return (

@@ -7,9 +7,9 @@ export const useError = () => useContext(ErrorContext);
 export const ErrorProvider = ({ children }) => {
   const [errors, setErrors] = useState([]);
 
-  const addError = (message) => {
+  const addError = (message, type = "error") => {
     const id = new Date().getTime();
-    setErrors([...errors, { id, message }]);
+    setErrors([...errors, { id, message, type }]);
   };
 
   const removeError = (id) => {
@@ -23,7 +23,7 @@ export const ErrorProvider = ({ children }) => {
         {errors.map((error) => (
           <div
             key={error.id}
-            className="flex items-center justify-between rounded bg-red-500 p-4 text-white shadow-lg"
+            className={`flex items-center justify-between rounded ${error.type == "error" ? "bg-red-500" : "bg-purple-600"} p-4 text-white shadow-lg`}
           >
             <span>{error.message}</span>
             <button onClick={() => removeError(error.id)} className="ml-4">

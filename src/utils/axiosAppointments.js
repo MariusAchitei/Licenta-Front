@@ -2,12 +2,12 @@
 import axios from "axios";
 
 // Create an axios instance
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080/api", // replace with your default root link
+const axiosAppointments = axios.create({
+  baseURL: "http://localhost:8081/api/v1", // replace with your default root link
 });
 
 // Add a request interceptor to include the Bearer token
-axiosInstance.interceptors.request.use(
+axiosAppointments.interceptors.request.use(
   (config) => {
     // Get the token from localStorage
     const token = localStorage.getItem("idToken");
@@ -23,4 +23,4 @@ axiosInstance.interceptors.request.use(
   },
 );
 
-export default axiosInstance;
+export default axiosAppointments;

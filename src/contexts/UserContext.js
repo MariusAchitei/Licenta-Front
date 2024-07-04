@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import UserPool from "utils/UserPool";
 import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 import { jwtDecode } from "jwt-decode";
+import axiosInstance from "utils/axiosInstance";
 
 export const UserContext = createContext();
 
@@ -14,7 +15,12 @@ export const UserProvider = ({ children }) => {
     if (storedToken) {
       const decodedToken = jwtDecode(storedToken);
       setUser(decodedToken);
-      setRoles(decodedToken["cognito:groups"] || []);
+      console.log("Decoded token: ", decodedToken);
+      if (decodedToken["cognito:groups"]?.length > 0) {
+        setRoles(decodedToken["cognito:groups"] || []);
+      } else {
+        setRoles(["user"]);
+      }
     }
   }, []);
 
@@ -32,6 +38,7 @@ export const UserProvider = ({ children }) => {
           localStorage.setItem("idToken", token); // Store the ID token
           const decodedToken = jwtDecode(token);
           setUser(decodedToken);
+          console.log("Decoded token: ", decodedToken);
           setRoles(decodedToken["cognito:groups"] || []);
           resolve(true);
         },
@@ -49,8 +56,18 @@ export const UserProvider = ({ children }) => {
     setRoles([]);
   };
 
+  const getIdentity = async () => {
+    try {
+      const response = await axiosInstance.get("/medics/identity");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching medics: ", error);
+      return null;
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, roles, login, logout }}>
+    <UserContext.Provider value={{ user, roles, login, logout, getIdentity }}>
       {children}
     </UserContext.Provider>
   );

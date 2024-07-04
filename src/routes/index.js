@@ -20,6 +20,9 @@ const PatientsList = lazy(() => import("pages/PatientsList"));
 const MyCalendar = lazy(() => import("pages/MyCalendar"));
 const UserDataForm = lazy(() => import("pages/UserDataForm"));
 const MedicProfile = lazy(() => import("pages/MedicProfile"));
+
+const DepartmentTable = lazy(() => import("pages/Departments"));
+const MedicalServiceTable = lazy(() => import("pages/MedicalServices"));
 // type RouteType = {
 //   path: string;
 //   component: React.LazyExoticComponent<() => JSX.Element>;
@@ -28,6 +31,16 @@ const MedicProfile = lazy(() => import("pages/MedicProfile"));
 // };
 
 const routes = [
+  {
+    path: "/departments",
+    component: DepartmentTable,
+    roles: ["admin"],
+  },
+  {
+    path: "/medical-services",
+    component: MedicalServiceTable,
+    roles: ["admin"],
+  },
   {
     path: "/user-data-form",
     component: UserDataForm,
@@ -79,7 +92,7 @@ const routes = [
     public: true,
   },
   {
-    path: "/clinic-detail",
+    path: "/clinic-detail/:id",
     component: ClinicDetail,
     roles: ["user", "medic", "admin"],
     public: true,

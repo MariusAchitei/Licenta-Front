@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Button } from "@windmill/react-ui";
 import WorkingHoursCard from "./WorkingHoursCard";
 
@@ -9,7 +9,11 @@ import { BathModal } from "./BathModal";
 
 import { createEventsServicePlugin } from "@schedule-x/events-service";
 import { ScheduleCalendar } from "./newFunction";
-
+import { UserContext } from "contexts/UserContext";
+import axiosAppointments from "utils/axiosAppointments";
+import axios from "axios";
+import { useError } from "contexts/ErrorConntext";
+import LoadingScreen from "pages/Loading";
 const eventsServicePlugin = createEventsServicePlugin();
 
 const getDayOfWeekString = (dayIndex) => {
@@ -49,7 +53,7 @@ function generateEventsForMonth(defaultWorkingHours) {
     const dayOfWeek = getDayOfWeekString(date.getDay());
     const workingHours = defaultWorkingHours[dayOfWeek];
 
-    workingHours.forEach((hours, index) => {
+    workingHours.workingHours?.forEach((hours, index) => {
       events.push({
         id: `${day}-${index}`,
         title: `${hours.start.split(":")[0]}-${hours.end.split(":")[0]}`,
@@ -64,33 +68,48 @@ function generateEventsForMonth(defaultWorkingHours) {
 }
 
 export default function ManageSchedule() {
+  const [fetchedEvents, setFetchedEvents] = useState(false);
+  const { addError } = useError();
   const [defaultWorkingHours, setDefaultWorkingHours] = useState({
-    monday: [
-      { start: "09:00:00", end: "12:00:00" },
-      { start: "13:00:00", end: "17:00:00" },
-    ],
-    tuesday: [
-      { start: "09:00:00", end: "12:00:00" },
-      { start: "13:00:00", end: "17:00:00" },
-    ],
-    wednesday: [
-      { start: "09:00:00", end: "12:00:00" },
-      { start: "13:00:00", end: "17:00:00" },
-    ],
-    thursday: [
-      { start: "09:00:00", end: "12:00:00" },
-      { start: "13:00:00", end: "17:00:00" },
-    ],
-    friday: [
-      { start: "09:00:00", end: "12:00:00" },
-      { start: "13:00:00", end: "19:00:00" },
-    ],
-    saturday: [],
-    sunday: [],
+    monday: {
+      workingHours: [
+        { start: "09:00:00", end: "12:00:00" },
+        { start: "13:00:00", end: "17:00:00" },
+      ],
+    },
+    tuesday: {
+      workingHours: [
+        { start: "09:00:00", end: "12:00:00" },
+        { start: "13:00:00", end: "17:00:00" },
+      ],
+    },
+    wednesday: {
+      workingHours: [
+        { start: "09:00:00", end: "12:00:00" },
+        { start: "13:00:00", end: "17:00:00" },
+      ],
+    },
+    thursday: {
+      workingHours: [
+        { start: "09:00:00", end: "12:00:00" },
+        { start: "13:00:00", end: "17:00:00" },
+      ],
+    },
+    friday: {
+      workingHours: [
+        { start: "09:00:00", end: "12:00:00" },
+        { start: "13:00:00", end: "17:00:00" },
+      ],
+    },
+    saturday: { workingHours: [] },
+    sunday: { workingHours: [] },
   });
   const [events, setEvents] = useState(
-    generateEventsForMonth(defaultWorkingHours),
+    [],
+    // generateEventsForMonth(defaultWorkingHours),
   );
+  const { getIdentity } = useContext(UserContext);
+  // console.log("Events: ", generateEventsForMonth(defaultWorkingHours));
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -100,6 +119,62 @@ export default function ManageSchedule() {
     start: "",
     end: "",
   });
+
+  useEffect(async () => {
+    console.log("am intrat");
+    addError("fetching intervals", "success");
+    const currentDate = new Date();
+    const medic = await getIdentity();
+    // addError(medic.externalId);
+    axiosAppointments
+      .get(`/providers/${medic.externalId}/intervals`, {
+        start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+        stop: new Date(currentDate.getFullYear(), 11, 31),
+      })
+      .then((response) => {
+        addError("Intervals fetched", "success");
+        console.log("Intervals fetched: ", response.data);
+        console.log("Events: ", generateEventsForMonth(defaultWorkingHours));
+        const newEvents = response.data.map((event) => ({
+          id: event.id,
+          title: `${event.start.split("T")[1].split(":")[0]}-${event.stop.split("T")[1].split(":")[0]}`,
+          start: event.start.replace("T", " "),
+          end: event.stop.replace("T", " "),
+          className: "work-event",
+        }));
+        //timeout 3 seconds
+        setTimeout(() => {}, 3000);
+
+        setEvents(newEvents);
+        console.log("Events: ", newEvents);
+        setFetchedEvents(true);
+        console.log("CALIBRU MARE");
+        eventsServicePlugin.set(newEvents);
+      })
+      .catch((error) => {
+        console.error("Error fetching intervals: ", error);
+        // addError("Error fetching intervals");
+      });
+    axiosAppointments
+      .get(`/work-plans/1000`)
+      .then((response) => {
+        const workingHours = response.data;
+        setDefaultWorkingHours({
+          monday: JSON.parse(workingHours.monday),
+          tuesday: JSON.parse(workingHours.tuesday),
+          wednesday: JSON.parse(workingHours.wednesday),
+          thursday: JSON.parse(workingHours.thursday),
+          friday: JSON.parse(workingHours.friday),
+          saturday: JSON.parse(workingHours.saturday),
+          sunday: JSON.parse(workingHours.sunday),
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching work plans: ", error);
+        addError("Error fetching work plans");
+      });
+  }, []);
+
   const handleEventClick = (event) => {
     console.log("S-a selectat");
     console.log(event);
@@ -132,10 +207,10 @@ export default function ManageSchedule() {
     });
   };
 
-  const handleBatchAddEvents = (startDate, endDate) => {
-    const newEvents = [];
-    const daysOfWeek = [1, 2, 3, 5]; // Monday, Tuesday, Wednesday, Friday
+  const handleBatchAddEvents = async (startDate, endDate) => {
     setBatchModalOpen(false);
+    console.log("Start date: ", startDate);
+    console.log("End date: ", endDate);
     for (
       let date = new Date(startDate);
       date <= new Date(endDate);
@@ -144,19 +219,33 @@ export default function ManageSchedule() {
       const dateString = date.toISOString().split("T")[0];
 
       if (!events.some((e) => e.start.startsWith(dateString))) {
-        defaultWorkingHours[getDayOfWeekString(date.getDay())].forEach(
-          (hours) => {
-            eventsServicePlugin.add({
-              id: `batch-${dateString}-${hours.start}`,
-              title: `${hours.start.split(":")[0]}-${hours.end.split(":")[0]}`,
-              start: `${dateString} ${hours.start}`,
-              end: `${dateString} ${hours.end}`,
-              className: "work-event",
-            });
-          },
-        );
+        defaultWorkingHours[
+          getDayOfWeekString(date.getDay())
+        ].workingHours.forEach((hours) => {
+          eventsServicePlugin.add({
+            id: `batch-${dateString}-${hours.start}`,
+            title: `${hours.start.split(":")[0]}-${hours.end.split(":")[0]}`,
+            start: `${dateString} ${hours.start}`,
+            end: `${dateString} ${hours.end}`,
+            className: "work-event",
+          });
+        });
       }
     }
+    const medic = await getIdentity();
+    axiosAppointments
+      .post("/providers/" + medic.externalId + "/intervals", {
+        start: startDate,
+        stop: endDate,
+      })
+      .then((response) => {
+        addError("Intervals added", "success");
+        console.log("Intervals added: ", response.data);
+      })
+      .catch((error) => {
+        addError("Error adding intervals", "error");
+        console.error("Error adding intervals: ", error);
+      });
   };
 
   return (
@@ -168,11 +257,15 @@ export default function ManageSchedule() {
           </h3>
           <div className="mx-10 flex min-w-[90%] flex-col text-sm md:flex-row lg:mx-24">
             <div className="flex-grow">
-              <ScheduleCalendar
-                events={events}
-                handleEventClick={handleEventClick}
-                eventsServicePlugin={eventsServicePlugin}
-              />
+              {!fetchedEvents ? (
+                <LoadingScreen />
+              ) : (
+                <ScheduleCalendar
+                  events={events}
+                  handleEventClick={handleEventClick}
+                  eventsServicePlugin={eventsServicePlugin}
+                />
+              )}
               {/* {ScheduleCalendar(events, handleEventClick, eventsServicePlugin)} */}
               <style jsx global>{`
                 .work-event {

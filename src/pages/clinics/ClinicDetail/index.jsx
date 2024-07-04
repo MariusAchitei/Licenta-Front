@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ClinicInfo from "./ClinicInfo";
 import DetailLayout from "components/custom/DetailLayout";
 import ClinicOverview from "./ClinicOverview";
 import ClinicGallery from "./ClinicGallery";
 import Reviews from "components/custom/DetailLayout/Reviews";
 import ClinicMap from "./ClinicMap";
+import axios from "axios";
+import LoadingScreen from "pages/Loading";
+import { useError } from "contexts/ErrorConntext";
+import { useParams } from "react-router-dom";
 
 const clinic = {
   name: "Clinica Sala Palatului",
@@ -113,14 +117,37 @@ const clinic = {
   ],
 };
 
-const tabs = [
-  { name: "Overview", component: ClinicOverview },
-  { name: "Gallery", component: ClinicGallery },
-  { name: "Map", component: ClinicMap },
-  { name: "Reviews", component: Reviews },
-];
-
 export default function ClinicDetail() {
+  const { addError } = useError();
+  const [clinic, setClinic] = useState({});
+  const { id } = useParams();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/public/clinics/${id}`)
+      .then((response) => {
+        setClinic(response.data);
+        setIsLoaded(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching clinic: ", error);
+        addError("Error fetching clinic");
+        setIsLoaded(true);
+      });
+  }, []);
+
+  if (!isLoaded || !clinic || !clinic.name) {
+    return <LoadingScreen />;
+  }
+
+  const tabs = [
+    { name: "Overview", component: ClinicOverview },
+    { name: "Gallery", component: ClinicGallery },
+    { name: "Map", component: ClinicMap },
+    { name: "Reviews", component: Reviews },
+  ];
+
   return (
     <DetailLayout
       tabs={tabs}

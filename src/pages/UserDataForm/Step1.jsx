@@ -24,6 +24,10 @@ const Step1 = ({ formData, setFormData, nextStep }) => {
     setFormData({ ...formData, county: e.target.value, city: "" });
   };
 
+  const handleGenderChange = (e) => {
+    setFormData({ ...formData, gender: e.target.value });
+  };
+
   const handleCityChange = (e) => {
     setFormData({ ...formData, city: e.target.value });
   };
@@ -66,33 +70,57 @@ const Step1 = ({ formData, setFormData, nextStep }) => {
               />
             </div>
           </div>
-          <div>
-            <label
-              htmlFor="personalId"
-              className="mb-2 block text-sm font-medium text-gray-900"
-            >
-              Personal ID
-            </label>
-            <TextInput
-              id="personalId"
-              name="personalId"
-              value={formData.personalId}
-              onChange={handleChange}
-              placeholder="Personal ID"
-              icon={AiOutlineIdcard}
-            />
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div>
+              <label
+                htmlFor="personalId"
+                className="mb-2 block text-sm font-medium text-gray-900"
+              >
+                Personal ID
+              </label>
+              <TextInput
+                id="personalId"
+                name="personalId"
+                value={formData.personalId}
+                onChange={handleChange}
+                placeholder="Personal ID"
+                icon={AiOutlineIdcard}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="gender"
+                className="mb-2 block text-sm font-medium text-gray-900"
+              >
+                Gender
+              </label>
+              <Select
+                id="county"
+                name="county"
+                value={formData.gender}
+                onChange={handleGenderChange}
+                className="w-full"
+              >
+                <option value="" disabled selected>
+                  Select Gender
+                </option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </Select>
+            </div>
           </div>
           <div>
             <label
-              htmlFor="phoneNumber"
+              htmlFor="phone"
               className="mb-2 block text-sm font-medium text-gray-900"
             >
               Phone Number
             </label>
             <TextInput
-              id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phoneNumber}
+              id="phone"
+              name="phone"
+              value={formData.phone}
               onChange={handleChange}
               placeholder="Phone Number"
               icon={AiOutlinePhone}
@@ -100,16 +128,16 @@ const Step1 = ({ formData, setFormData, nextStep }) => {
           </div>
           <div>
             <label
-              htmlFor="dateOfBirth"
+              htmlFor="birthDate"
               className="mb-2 block text-sm font-medium text-gray-900"
             >
               Date of Birth
             </label>
             <TextInput
-              id="dateOfBirth"
-              name="dateOfBirth"
+              id="birthDate"
+              name="birthDate"
               type="date"
-              value={formData.dateOfBirth}
+              value={formData.birthDate}
               onChange={handleChange}
               icon={AiOutlineCalendar}
             />

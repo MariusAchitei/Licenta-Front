@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "react-modal";
 import { Button } from "@windmill/react-ui";
-import { FaPlus, FaTrash, FaMapMarkerAlt } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import "leaflet/dist/leaflet.css";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import FilesGallery from "components/FileGallery";
-import ReactQuill from "react-quill";
+import Dropzone from "react-dropzone";
 
 const mockClinicData = {
   name: "Hyperclinica Iasi",
@@ -26,9 +26,9 @@ const mockClinicData = {
   ],
   gallery: [
     { id: 1, name: "Lobby Area.jpg", type: "jpg" },
-    { id: 1, name: "Consultation Room.jpg", type: "jpg" },
-    { id: 1, name: "Radiology Department.jpg", type: "jpg" },
-    { id: 1, name: "Laboratory.jpg", type: "jpg" },
+    { id: 2, name: "Consultation Room.jpg", type: "jpg" },
+    { id: 3, name: "Radiology Department.jpg", type: "jpg" },
+    { id: 4, name: "Laboratory.jpg", type: "jpg" },
   ],
   coordinates: { lat: 47.1585, lng: 27.6014 },
   mapLink: "https://maps.google.com/?q=Palace+Hall+Clinic",
@@ -55,74 +55,94 @@ const mockClinicData = {
 };
 
 const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
-  const [clinicData, setClinicData] = useState(null);
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    address: "",
+    schedule: [],
+    description: "",
+    contact: {
+      phone: "",
+      email: "",
+      website: "",
+    },
+    gallery: [],
+    coordinates: {
+      lat: 44.437926,
+      lng: 26.096306,
+    },
+    specialties: [],
+    services: [],
+    mainPhoto: null,
+  });
+
   const [markerPosition, setMarkerPosition] = useState({
     lat: 44.437926,
     lng: 26.096306,
   });
 
+  const [previewMainPhoto, setPreviewMainPhoto] = useState(null);
+
   useEffect(() => {
-    const fetchClinicData = () => {
+    const fetchClinicData = async () => {
       try {
-        console.log("Try");
-        // const response = await axios.get("/api/clinic"); // Replace with actual API URL
-        // setClinicData(response.data);
-        // setFormData(response.data);
-        // setMarkerPosition({
-        //   lat: response.data.coordinates.lat,
-        //   lng: response.data.coordinates.lng,
-        // });
-        setFormData(mockClinicData); // Fallback to mock data
+        const response = await axios.get("/api/clinic"); // Replace with actual API URL
+        setFormData(response.data);
+        setMarkerPosition({
+          lat: response.data.coordinates.lat,
+          lng: response.data.coordinates.lng,
+        });
       } catch (error) {
         console.error("Error fetching clinic data:", error);
         setFormData(mockClinicData); // Fallback to mock data
-        console.log("error", formData);
-        // Handle error
       }
     };
 
     if (isOpen && !createMode) {
-      console.log("isOpen", isOpen);
       fetchClinicData();
     }
-    console.log("formData", formData);
-  }, [isOpen]);
+  }, [isOpen, createMode]);
 
   const handleChange = (e) => {
-    if (formData == null) setFormData({});
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name.split(".").length > 1) {
+      const [parent, child] = name.split(".");
+      setFormData((prevData) => ({
+        ...prevData,
+        [parent]: {
+          ...prevData[parent],
+          [child]: value,
+        },
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleArrayChange = (e, index, key) => {
-    if (!formData) setFormData({});
-    if (!formData[key]) {
-      setFormData({ ...formData, [key]: [] });
-    }
     const updatedArray = [...formData[key]];
     updatedArray[index] = e.target.value;
-    setFormData({ ...formData, [key]: updatedArray });
+    setFormData((prevData) => ({
+      ...prevData,
+      [key]: updatedArray,
+    }));
   };
 
   const handleAddItem = (key) => {
-    console.log("Deci nu te cred 1", formData);
-    if (!formData) {
-      setFormData({ [key]: [""] });
-      return;
-    }
-    console.log("Deci nu te cred 2", formData);
-    if (!formData[key]) {
-      console.log("formData BAGAMIAS PUL", formData, "key", formData[key]);
-      setFormData({ ...formData, [key]: [] });
-    }
-    console.log("AM IESIT");
-    setFormData({ ...formData, [key]: [...formData[key], ""] });
+    setFormData((prevData) => ({
+      ...prevData,
+      [key]: [...(prevData[key] || []), ""],
+    }));
   };
 
   const handleRemoveItem = (key, index) => {
     const updatedArray = formData[key].filter((_, i) => i !== index);
-    setFormData({ ...formData, [key]: updatedArray });
+    setFormData((prevData) => ({
+      ...prevData,
+      [key]: updatedArray,
+    }));
   };
 
   const handleMarkerDragEnd = (e) => {
@@ -130,26 +150,116 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
     const lat = latLng.lat();
     const lng = latLng.lng();
     setMarkerPosition({ lat, lng });
-    setFormData({ ...formData, coordinates: { lat, lng } });
+    setFormData((prevData) => ({
+      ...prevData,
+      coordinates: { lat, lng },
+    }));
   };
 
-  if (!formData && !createMode) {
-    return null; // or a loading spinner
-  }
+  const handleFileUpload = (newFiles) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      gallery: [...(prevData.gallery || []), ...newFiles],
+    }));
+  };
+
+  const handleFileRemove = (index) => {
+    const updatedGallery = formData.gallery.filter((_, i) => i !== index);
+    setFormData((prevData) => ({
+      ...prevData,
+      gallery: updatedGallery,
+    }));
+  };
+
+  const handleMainPhotoUpload = (files) => {
+    console.log("BAAADSFLKNDSOGNDSFKLAFNDSFN");
+    const file = files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      mainPhoto: file,
+    }));
+    setPreviewMainPhoto(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${formData.coordinates.lat},${formData.coordinates.lng}&key=${"AIzaSyC6qvAEkBdH88CSgYmIGMDYKdjJRhJXCm8"}`;
+
+      const geocodeResponse = await axios.get(geocodeUrl);
+      const addressComponents =
+        geocodeResponse.data.results[0].address_components;
+
+      let city = "";
+      let county = "";
+
+      addressComponents.forEach((component) => {
+        if (component.types.includes("locality")) {
+          city = component.long_name;
+        }
+        if (component.types.includes("administrative_area_level_2")) {
+          county = component.long_name;
+        }
+      });
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("address", formData.address);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("phone", formData.contact.phone);
+      formDataToSend.append("email", formData.contact.email);
+      formDataToSend.append("website", formData.contact.website);
+      formDataToSend.append("lat", formData.coordinates.lat);
+      formDataToSend.append("lng", formData.coordinates.lng);
+      formDataToSend.append(
+        "specialties",
+        JSON.stringify(formData.specialties),
+      );
+      formDataToSend.append("services", JSON.stringify(formData.services));
+      formDataToSend.append("city", city);
+      formDataToSend.append("county", county);
+      if (formData.mainPhoto) {
+        formDataToSend.append("mainPhoto", formData.mainPhoto);
+      }
+      for (let i = 0; i < formData.gallery.length; i++) {
+        if (formData.gallery[i].file)
+          formDataToSend.append("files", formData.gallery[i].file);
+      }
+
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/clinics",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      onSave(response.data);
+      onClose();
+    } catch (error) {
+      console.error("Error saving clinic data:", error);
+    }
+  };
 
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Edit Clinic"
-      className="z-50 m-auto h-full w-[85vw] rounded-md  p-6 shadow-lg lg:max-w-2xl"
+      className="z-50 m-auto h-full w-[85vw] rounded-md p-6 shadow-lg lg:max-w-2xl"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
     >
       <div className="max-h-[90vh] overflow-auto rounded-2xl bg-white p-6 shadow-lg">
         <h2 className="mb-4 text-2xl font-bold">
           {createMode ? "Add Clinic" : "Edit Clinic"}
         </h2>
-        <form>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Name
@@ -157,7 +267,7 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             <input
               type="text"
               name="name"
-              value={formData?.name}
+              value={formData.name}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
@@ -169,48 +279,18 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             <input
               type="text"
               name="address"
-              value={formData?.address}
+              value={formData.address}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
-          </div>
-          <div className="mb-4 space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Schedule
-            </label>
-            <div className="space-x-3">
-              <input
-                id="bordered-checkbox-1"
-                type="checkbox"
-                value=""
-                name="bordered-checkbox"
-                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
-              ></input>
-              <label htmlFor="Week days">Week days</label>
-            </div>
-            <div className="space-x-3">
-              <input
-                id="bordered-checkbox-1"
-                type="checkbox"
-                value=""
-                name="bordered-checkbox"
-                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
-              ></input>
-              <label htmlFor="include-weekends">Include weekends</label>
-            </div>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Description
             </label>
-            {/* <ReactQuill
-              className="h-[70%]"
-              value={formData?.description}
-              onChange={handleChange}
-            /> */}
             <textarea
               name="description"
-              value={formData?.description}
+              value={formData.description}
               onChange={handleChange}
               className="mt-1 block h-48 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
@@ -221,8 +301,8 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             </label>
             <input
               type="text"
-              name="contactPhone"
-              value={formData?.contact?.phone}
+              name="contact.phone"
+              value={formData.contact.phone}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
@@ -233,8 +313,8 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             </label>
             <input
               type="email"
-              name="contactEmail"
-              value={formData?.contact?.email}
+              name="contact.email"
+              value={formData.contact.email}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
@@ -245,20 +325,35 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             </label>
             <input
               type="text"
-              name="contactWebsite"
-              value={formData?.contact?.website}
+              name="contact.website"
+              value={formData.contact.website}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Gallery
+              Main Photo
             </label>
-            <FilesGallery
-              files={formData?.gallery}
-              onFileUpload={() => {}}
-            ></FilesGallery>
+            <Dropzone onDrop={handleMainPhotoUpload}>
+              {({ getRootProps, getInputProps }) => (
+                <div
+                  {...getRootProps()}
+                  className="mt-1 flex cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-300 px-6 py-4"
+                >
+                  <input {...getInputProps()} />
+                  {previewMainPhoto ? (
+                    <img
+                      src={previewMainPhoto}
+                      alt="Preview"
+                      className="h-24 w-24 object-cover"
+                    />
+                  ) : (
+                    <p>Drag 'n' drop a file here, or click to select file</p>
+                  )}
+                </div>
+              )}
+            </Dropzone>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
@@ -266,20 +361,18 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             </label>
             <div className="mb-2 flex items-center">
               <input
-                // id="Week days"
                 type="number"
                 name="lat"
-                value={formData?.coordinates?.lat}
+                value={formData.coordinates.lat}
                 onChange={(e) => handleChange(e)}
                 className="mr-2 flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
               <input
-                id="include-weekends"
                 type="number"
                 name="lng"
-                value={formData?.coordinates?.lng}
+                value={formData.coordinates.lng}
                 onChange={(e) => handleChange(e)}
-                className="snb ml-2 flex-1 rounded-md border-gray-300  shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="ml-2 flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </div>
             <LoadScript googleMapsApiKey="AIzaSyC6qvAEkBdH88CSgYmIGMDYKdjJRhJXCm8">
@@ -298,9 +391,19 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
+              Gallery
+            </label>
+            <FilesGallery
+              files={formData.gallery}
+              onFileUpload={handleFileUpload}
+              onFileRemove={handleFileRemove}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
               Specialties
             </label>
-            {formData?.specialties?.map((specialty, index) => (
+            {formData.specialties.map((specialty, index) => (
               <div key={index} className="mb-2 flex items-center">
                 <input
                   type="text"
@@ -325,7 +428,7 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             <label className="block text-sm font-medium text-gray-700">
               Services
             </label>
-            {formData?.services?.map((service, index) => (
+            {formData.services.map((service, index) => (
               <div key={index} className="mb-2 flex items-center">
                 <input
                   type="text"
@@ -351,7 +454,7 @@ const EditClinicModal = ({ isOpen, onClose, onSave, createMode }) => {
             <Button layout="outline" onClick={onClose}>
               Close
             </Button>
-            <Button className="ml-4" onClick={() => onSave(formData)}>
+            <Button className="ml-4" onClick={handleSubmit}>
               Save
             </Button>
           </div>

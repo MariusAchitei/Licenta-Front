@@ -6,6 +6,7 @@ const DoctorCard = ({ doctor, selectedInterval, setSelectedInterval }) => {
     const [hour, minute] = time.split(":");
     return `${hour}:${minute}`;
   };
+  console.log(doctor);
 
   const handleIntervalClick = (interval) => {
     // if (interval.isAvailable) {
@@ -16,10 +17,16 @@ const DoctorCard = ({ doctor, selectedInterval, setSelectedInterval }) => {
   return (
     <div className="flex flex-col items-start rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800">
       <div className="mb-4 flex items-center">
-        {doctor.photo ? (
+        {doctor.medic.photo ? (
           <img
-            src={doctor.photo}
-            alt={doctor.name}
+            src={doctor.medic.photo}
+            alt={
+              doctor.medic.professionalTitle +
+              " " +
+              doctor.medic.lastName +
+              " " +
+              doctor.medic.firstName
+            }
             className="mr-10 h-16 w-16 rounded-full"
           />
         ) : (
@@ -27,17 +34,21 @@ const DoctorCard = ({ doctor, selectedInterval, setSelectedInterval }) => {
         )}
         <div>
           <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-            {doctor.name}
+            {doctor.medic.professionalTitle +
+              " " +
+              doctor.medic.lastName +
+              " " +
+              doctor.medic.firstName}
           </h3>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            {doctor.title}
+            {doctor.medic.role}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            {doctor.department}
+            {doctor.medic.departmentName}
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          {/* <p className="text-sm text-gray-600 dark:text-gray-400">
             Rating {doctor.rating} • {doctor.reviewsNb} reviews
-          </p>
+          </p> */}
         </div>
       </div>
       <div className="mb-4">
@@ -45,11 +56,11 @@ const DoctorCard = ({ doctor, selectedInterval, setSelectedInterval }) => {
           Clinic
         </p>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          {doctor.clinic}
+          {doctor.medic.clinicName}
         </p>
       </div>
-      <div className="flex space-x-2">
-        {doctor.intervals.map((interval, index) => (
+      <div className="flex max-w-[30vh] flex-wrap space-x-2 space-y-2">
+        {doctor.timeSlots.map((interval, index) => (
           <div
             key={index}
             onClick={() => handleIntervalClick(interval)}

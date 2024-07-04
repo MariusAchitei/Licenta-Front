@@ -10,10 +10,10 @@ export default function ClinicOverview({ data }) {
           Available Specialties
         </h4>
         <div className="mt-2">
-          {data.specialties.map((specialty, index) => (
+          {data.services.map((specialty, index) => (
             <span
               key={index}
-              className="mb-2 mr-2 inline-block rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-800"
+              className="mb-2 mr-2 inline-block rounded-full bg-gray-100 px-2 py-1 text-gray-800"
             >
               {specialty}
             </span>

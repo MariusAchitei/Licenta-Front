@@ -9,6 +9,7 @@ import UserPool from "utils/UserPool";
 import Modal from "react-modal";
 import { CognitoUser } from "amazon-cognito-identity-js";
 import { useError } from "contexts/ErrorConntext";
+import { useNavigate } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -20,6 +21,7 @@ const passwordChecks = {
 };
 
 export default function Register() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmationCode, setConfirmationCode] = useState("");
@@ -82,6 +84,7 @@ export default function Register() {
       console.log("call result: " + result);
       setIsSubmitting(false);
       setModalIsOpen(false);
+      navigate("/app/user-data-form", { state: { email } });
     });
   };
 

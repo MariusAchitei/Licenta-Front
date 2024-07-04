@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Dialog,
   Disclosure,
@@ -19,6 +19,9 @@ import DoctorList from "./DoctorList";
 import { Button } from "@windmill/react-ui";
 
 import CreateMedicModal from "./CreateMedicModal";
+import { UserContext } from "contexts/UserContext";
+
+import axiosInstance from "utils/axiosInstance";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -171,14 +174,13 @@ function classNames(...classes) {
 }
 
 export default function MediSearch3() {
+  const { user, roles } = useContext(UserContext);
   const [isModalOpen, setModalOpen] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const handleCreateClick = () => {
     setModalOpen(true);
   };
-
-  const handleSave = (formData) => {};
 
   return (
     <>
@@ -193,9 +195,11 @@ export default function MediSearch3() {
             </h1>
 
             <div className="flex items-center">
-              <div className="mr-5">
-                <Button onClick={handleCreateClick}>Create</Button>
-              </div>
+              {roles?.includes("admin") && (
+                <div className="mr-5">
+                  <Button onClick={handleCreateClick}>Create</Button>
+                </div>
+              )}
               <Menu as="div" className="relative inline-block text-left">
                 <div>
                   <Menu.Button className="group inline-flex justify-center  font-medium text-gray-700 hover:text-gray-900">
@@ -336,7 +340,7 @@ export default function MediSearch3() {
       <CreateMedicModal
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
-        onSave={handleSave}
+        onSave={() => {}}
       />
     </>
   );

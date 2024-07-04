@@ -10,14 +10,12 @@ import {
 } from "react-router-dom";
 import Layout from "containers/Layout";
 
-import { Amplify } from "aws-amplify";
-import awsconfig from "utils/awsconfig";
-
 import routes from "routes";
 import { ChatBotComponent as ChatBot } from "components/ChatBot";
 import { UserProvider } from "contexts/UserContext";
 import ProtectedRoute from "components/ProtectedRoute";
 import { ErrorProvider } from "contexts/ErrorConntext";
+// import "dotenv/config";
 
 // Amplify.configure(awsconfig);
 // const Layout = lazy(() => import("containers/Layout"));
